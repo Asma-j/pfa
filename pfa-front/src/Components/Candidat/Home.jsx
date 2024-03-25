@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import recrutementlogo from '../auth/img/image6.png'; 
 import profile from '../auth/img/images.png'; 
-import quiz from '../auth/img/image7.png'; 
+import quiz from '../auth/img/image7.png';
 import defaultAvatar from '../auth/img/images (1).png'; 
 import { Navbar, Nav,NavDropdown,Image , Form, FormControl, Button } from 'react-bootstrap';
 const Home = () => {
   const [societes, setSocietes] = useState(null); // Initialiser avec null
+  const [searchName, setSearchName] = useState('');
+  const [searchAddress, setSearchAddress] = useState('');
 
   useEffect(() => {
     fetchData();
@@ -14,7 +16,7 @@ const Home = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/societe');
+      const response = await axios.get(`http://localhost:5000/api/societe?name=${searchName}&address=${searchAddress}`);
       console.log('Response:', response); 
       if (response.data.societes) {
         setSocietes(response.data.societes); 
@@ -25,10 +27,16 @@ const Home = () => {
       console.error('Error fetching data:', error);
     }
   };
+  
+
+
+  
   const handleLogout = () => {
     // Mettez ici votre logique de déconnexion
   };
-
+  const handleSearch = () => {
+    fetchData();
+  };
 
   return (
     <div>
@@ -71,15 +79,30 @@ const Home = () => {
         <Form inline className="mb-4">
           <div className='row'>
             <div className='col-md-4'>
-                <FormControl type="text" placeholder="Rechercher par nom" className="mr-sm-2 mb-2 mb-sm-0" style={{ marginRight: '10px'}} />
+              <FormControl 
+                type="text" 
+                placeholder="Rechercher par nom" 
+                className="mr-sm-2 mb-2 mb-sm-0" 
+                style={{ marginRight: '10px'}} 
+                value={searchName}
+                onChange={(e) => setSearchName(e.target.value)}
+              />
             </div>
             <div className='col-md-4'>
-  <FormControl type="text" placeholder="Rechercher par adresse" className="mr-sm-2" style={{ marginRight: '10px'}} /></div>
-            <div className='col-md-4'>  <Button variant="outline-success">Rechercher</Button></div>
+              <FormControl 
+                type="text" 
+                placeholder="Rechercher par adresse" 
+                className="mr-sm-2" 
+                style={{ marginRight: '10px'}} 
+                value={searchAddress}
+                onChange={(e) => setSearchAddress(e.target.value)}
+              />
+            </div>
+            <div className='col-md-4'>  
+              <Button variant="outline-success" onClick={handleSearch}>Rechercher</Button>
+            </div>
           </div>
-
-
-</Form>
+        </Form>
 
       </div>
 <br></br>
@@ -89,12 +112,13 @@ const Home = () => {
   {societes && societes.map((societe, index) => (
     <div className="col-md-4" key={index}>
       <div className="card mb-4">
-        {societe && societe.avatar ? (
-          <img src={`http://localhost:5000/${societe.avatar}`} className="card-img-top" alt="Avatar" style={{ height: "250px" }} />
-        ) : (
-          <img src={defaultAvatar} className="card-img-top" alt="Avatar par défaut" style={{ height: "250px" }} />
+      {societe && societe.avatar ? (
+  <img src={`http://localhost:5000/${societe.avatar}`}  className="card-img-top" alt="Avatar" style={{ height: "250px" }} />
+) : (
+  <img src={defaultAvatar} className="card-img-top" alt="Avatar par défaut" style={{ height: "250px" }} />
+)}
 
-        )}
+
         <div className="card-body">
           <h5 className="card-title">{societe.nom_societe}</h5>
           <p className="card-text">Adresse: {societe.adresse}</p>

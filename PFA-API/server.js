@@ -5,7 +5,7 @@ const morgan = require('morgan');
 const cors = require('cors'); // Importez le module CORS
 const jwt = require('jsonwebtoken');
 const Societe = require('./models/Societe');
-const bcrypt = require('bcrypt');
+const upload = require('./middleware/upload')
 
 const loginRoute = require('./routes/login');
 const registerRoute = require('./routes/register');
@@ -145,8 +145,12 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: 'Internal server error' });
 });
-app.post("/api/registerSociete", (req, res) => {
-  Societe.create(req.body)
+app.post("/api/registerSociete", upload.single("avatar"), (req, res) => {
+  const formData = {
+    ...req.body,
+    avatar: req.file.path,
+  };
+  Societe.create(formData)
     .then(societe => res.json(societe))
     .catch(err => res.json(err));
 });

@@ -19,38 +19,42 @@ const Register = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         
-        let formData;
-        let url;
-        
-        if (role === 'Societe') {
-            formData = {
-                nom_societe,
-                poste,
-                adresse,
-                email,
-                password,
-                avatar
+        const formData = new FormData();
     
-            };
-            url = 'http://localhost:5000/api/registerSociete';
+        if (role === 'Societe') {
+            formData.append('nom_societe', nom_societe);
+            formData.append('poste', poste);
+            formData.append('adresse', adresse);
+            formData.append('email', email);
+            formData.append('password', password);
+            formData.append('avatar', avatar);
+            
+            axios.post('http://localhost:5000/api/registerSociete', formData)
+                .then(response => {
+                    console.log(response);
+                    navigate("/login");
+                })
+                .catch(err => console.log(err));
         } else {
-            formData = {
-                nom,
-                prenom,
-                email,
-                password,
-                role
-            };
-            url = 'http://localhost:5000/api/register';
+            formData.append('nom', nom);
+            formData.append('prenom', prenom);
+            formData.append('email', email);
+            formData.append('password', password);
+            formData.append('role', role);
+            
+            axios.post('http://localhost:5000/api/register', formData ,{
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }
+              })
+                .then(response => {
+                    console.log(response);
+                    navigate("/login");
+                })
+                .catch(err => console.log(err));
         }
-        
-        axios.post(url, formData)
-            .then(response => {
-                console.log(response);
-                navigate("/login");
-            })
-            .catch(err => console.log(err));
     };
+    
     
 
     return (
@@ -68,7 +72,7 @@ const Register = () => {
                     </div>
                     <div className="col-md-6">
                         <main className="container py-4">
-                            <form onSubmit={handleSubmit} enctype="multipart/form-data">
+                            <form onSubmit={handleSubmit} encType="multipart/form-data">
                                 {/* Type d'utilisateur */}
                                 <div className="form-group">
                                     <label>Type d'utilisateur:</label>
@@ -166,12 +170,7 @@ const Register = () => {
                                         </div>
                                         <div className="form-group">
     <label>Choisir un avatar:</label>
-    <input
-    type="file"
-    className="form-control-file"
-    name="avatar"
-    onChange={(e) => setAvatar(e.target.value)} 
-/>
+    <input type="file" className="form-control-file" name="avatar" onChange={(e) => setAvatar(e.target.files[0])} />
 </div>
                                     </>
                                 )}
