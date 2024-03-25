@@ -107,14 +107,23 @@ app.post("/api/login", async (req, res) => {
   }
 });
 app.get('/api/societe', (req, res) => {
+  const { name, address } = req.query;
   
-  Societe.find()
+  let query = {};
+
+  if (name) {
+    query.nom_societe = { $regex: name, $options: 'i' };
+  }
+  
+  if (address) {
+    query.adresse = { $regex: address, $options: 'i' };
+  }
+
+  Societe.find(query)
     .then(societes => {
-    
       res.json({ societes });
     })
     .catch(error => {
-      // En cas d'erreur, renvoyer un message d'erreur
       console.error(error);
       res.status(500).json({ message: 'Internal server error' });
     });

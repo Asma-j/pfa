@@ -16,7 +16,13 @@ const Home = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/societe?name=${searchName}&address=${searchAddress}`);
+      const response = await axios.get('http://localhost:5000/api/societe', {
+        params: {
+          name: searchName,
+          address: searchAddress
+        }
+      });
+  
       console.log('Response:', response); 
       if (response.data.societes) {
         setSocietes(response.data.societes); 
@@ -27,6 +33,7 @@ const Home = () => {
       console.error('Error fetching data:', error);
     }
   };
+  
   
 
 
