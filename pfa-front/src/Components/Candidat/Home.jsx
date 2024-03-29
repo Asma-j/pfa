@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import recrutementlogo from '../auth/img/image6.png'; 
-import profile from '../auth/img/images.png'; 
 import quiz from '../auth/img/image7.png';
 import defaultAvatar from '../auth/img/images (1).png'; 
-import { Navbar, Nav,NavDropdown,Image , Form, FormControl, Button } from 'react-bootstrap';
+import { Image , Form, FormControl, Button } from 'react-bootstrap';
+import NavBar from './NavBar';
+
 const Home = () => {
   const [societes, setSocietes] = useState(null); // Initialiser avec null
   const [searchName, setSearchName] = useState('');
@@ -38,44 +38,14 @@ const Home = () => {
 
 
   
-  const handleLogout = () => {
-    // Mettez ici votre logique de déconnexion
-  };
+
   const handleSearch = () => {
     fetchData();
   };
 
   return (
     <div>
-    
-    <Navbar bg="light" expand="lg" className='m-2' >
-        <Navbar.Brand  >
-          <img
-            src={recrutementlogo} 
-            width="30"
-            height="30"
-            alt="EmploiAnalytique Logo"
-            
-          />
-         <small> EmploiAnalytique</small>
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="mr-auto">
-            <Nav.Link href="#home">Accueil</Nav.Link>
-          </Nav>
-          <Nav style={{ marginLeft: 'auto' }}>
-  <Nav.Link href="#profile">
-    <Image src={profile}  roundedCircle style={{ width: '30px', height: '30px', marginRight: '10px' }} />
-    Profil
-  </Nav.Link>
-  <NavDropdown title="Déconnexion" id="basic-nav-dropdown">
-    <NavDropdown.Item onClick={handleLogout}>Déconnexion</NavDropdown.Item>
-  </NavDropdown>
-</Nav>
-
-        </Navbar.Collapse>
-      </Navbar>
+   <NavBar/>
       <div className="container mt-4">
         <Image src={quiz} fluid className="my-4" /> 
         <h2>Présentation de Notre Application</h2>

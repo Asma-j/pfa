@@ -12,7 +12,6 @@ const OfferForm = () => {
   const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
   const handleSubmit = async e => {
     e.preventDefault();
     const formDataToSend = {
@@ -23,12 +22,15 @@ const OfferForm = () => {
     };
   
     try {
-      const token = localStorage.getItem('token'); 
-      const response = await axios.post('http://localhost:5000/api/offre', formDataToSend, {
-        headers: {
-          'Authorization': `Bearer ${token}` 
-        }
-      });
+      const token = localStorage.getItem('token');
+console.log('Token:', token); // Assurez-vous que le token est correct ici
+const response = await axios.post('http://localhost:5000/api/offre', formDataToSend, {
+  headers: {
+    'Authorization': `Bearer ${token}`
+  }
+});
+
+      
       console.log('Success:', response);
   
     } catch (error) {
@@ -36,6 +38,7 @@ const OfferForm = () => {
      
     }
   };
+  
 
   return (
     <form onSubmit={handleSubmit}>

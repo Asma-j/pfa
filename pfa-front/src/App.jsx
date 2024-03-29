@@ -25,6 +25,7 @@ const App = () => {
 
   const getSocieteId = async (token) => {
     try {
+  
       const response = await fetch('http://localhost:5000/societe', {
         headers: {
           Authorization: `Bearer ${token}`,
