@@ -57,12 +57,12 @@ const verifyToken = (req, res, next) => {
     if (!decoded.id) {
       return res.status(401).json({ message: 'Invalid token format' });
     }
-    if (!decoded.companyId) {
-   
+    if (decoded.role === 'Societe' && !decoded.companyId) {
       return res.status(401).json({ message: 'Company ID not provided in token' });
     }
-
-  
+    req.decoded = decoded; // Store the decoded token in the request object for later use
+    
+    // Move the code that uses decoded here
     Utilisateur.findById(decoded.id)
       .then(user => {
         if (!user) {
@@ -89,6 +89,7 @@ const verifyToken = (req, res, next) => {
       });
   });
 };
+
 
 app.post("/api/login", async (req, res) => {
   try {
@@ -156,6 +157,8 @@ router.get('/user-role', verifyToken, (req, res) => {
 
   res.json({ role });
 });
+
+
 
 
 app.post("/api/register", (req, res) => {
