@@ -5,8 +5,8 @@ const upload = require('../middleware/upload')
 // Create a new Utilisateur
 router.get('/', societeController.index);
 
-// Get all Utilisateurs
-router.post('/show', societeController.show);
+router.get('/:id', societeController.findOne);
+
 
 // Get a single Utilisateur by ID
 router.post('/store', upload.single('avatar'),societeController.store);

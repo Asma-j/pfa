@@ -15,21 +15,22 @@ const index = (req, res, next) => {
       });
     });
 };
-
-const show = (req, res, next) => {
-  let societeID = req.body.societeID;
+const findOne = (req, res, next) => {
+  let societeID = req.params.id; // Récupérer l'ID de la société à partir des paramètres de l'URL
   Societe.findById(societeID)
     .then(response => {
-      res.json({
-        response
-      });
+      if (!response) {
+        return res.status(404).json({ message: 'Societe not found' });
+      }
+      res.json({ response });
     })
     .catch(errors => {
-      res.json({
-        message: 'error'
-      });
+      console.error(errors);
+      res.status(500).json({ message: 'Internal server error' });
     });
 };
+
+
 
 const store = (req, res, next) => {
   // Create a new instance of Societe using the data from the request
@@ -92,4 +93,4 @@ const destroy = (req, res, next) => {
     });
 };
 
-module.exports = { index, show, store, update, destroy };
+module.exports = { index, store, update, destroy,findOne };

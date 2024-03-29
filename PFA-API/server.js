@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const cors = require('cors'); // Importez le module CORS
 const jwt = require('jsonwebtoken');
 const Societe = require('./models/Societe');
+const Offre = require('./models/Offre');
 const upload = require('./middleware/upload')
 
 const loginRoute = require('./routes/login');
@@ -53,10 +54,19 @@ const verifyToken = (req, res, next) => {
     if (err) {
       return res.status(401).json({ message: 'Invalid token' });
     }
+    if (!decoded.id) {
+      return res.status(401).json({ message: 'Invalid token format' });
+    }
+    if (!decoded.companyId) {
+   
+      return res.status(401).json({ message: 'Company ID not provided in token' });
+    }
+
+  
     Utilisateur.findById(decoded.id)
       .then(user => {
         if (!user) {
-          Societe.findById(decoded.id)
+          Societe.findById(decoded.companyId)
             .then(societe => {
               if (!societe) {
                 return res.status(404).json({ message: 'User or company not found' });
@@ -85,10 +95,14 @@ app.post("/api/login", async (req, res) => {
     const { email, password } = req.body;
     let user = await Utilisateur.findOne({ email });
     let role = 'Utilisateur';
+    let societeId = null;
 
     if (!user) {
       user = await Societe.findOne({ email });
       role = 'Societe';
+      if (user) {
+        societeId = user._id; 
+      }
     }
 
     if (!user) {
@@ -99,8 +113,8 @@ app.post("/api/login", async (req, res) => {
       return res.status(401).json({ message: 'Mot de passe incorrect' });
     }
 
-    const token = jwt.sign({ id: user._id }, 'your_secret_key', { expiresIn: '1h' });
-    res.status(200).json({ token, role });
+    const token = jwt.sign({ id: user._id, companyId: societeId }, 'your_secret_key', { expiresIn: '1h' });
+    res.status(200).json({ token, role, societeId });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Erreur interne du serveur' });
@@ -171,9 +185,81 @@ app.use((err, req, res, next) => {
 
 
 
-app.get("/getData", (req, res) => {
-  res.send("Data from server");
+app.get('/api/offre', verifyToken, async (req, res) => {
+  try {
+    if (!req.societe || !req.societe._id) {
+      return res.status(400).json({ message: 'Societe ID is not defined' });
+    }
+
+    let societeId = req.societe._id;
+
+    if (req.query.societe) {
+      // Vérifiez si l'ID de la société est un ObjectID valide
+      if (!mongoose.Types.ObjectId.isValid(req.query.societe)) {
+        return res.status(400).json({ message: 'Invalid societe ID' });
+      }
+      societeId = req.query.societe;
+    }
+
+
+    const offres = await Offre.find({ societe: societeId });
+
+
+    res.status(200).json({ offres });
+  } catch (err) {
+    console.error('Error fetching offres:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 });
+app.post("/api/offre", verifyToken, (req, res) => {
+  
+  if (!req.societe) {
+    return res.status(403).json({ message: 'Vous devez être une société pour ajouter une offre' });
+  }
+
+  const newOffre = new Offre({
+    titre: req.body.titre,
+    description: req.body.description,
+    societe: req.societe._id, 
+    dateExp: req.body.dateExp
+  });
+
+  newOffre.save()
+    .then(savedOffre => {
+
+      res.status(201).json({ offre: savedOffre });
+    })
+    .catch(error => {
+      console.error(error);
+      res.status(500).json({ message: 'Erreur interne du serveur lors de lajout de offre' });
+    });
+});
+
+
+app.get('/api/societe', verifyToken, (req, res) => {
+
+  const societeId = req.query.id; 
+
+
+  if (!mongoose.Types.ObjectId.isValid(societeId)) {
+    return res.status(400).json({ message: 'Invalid societe ID' });
+  }
+
+
+  Societe.findById(societeId)
+    .then(societe => {
+      if (!societe) {
+        return res.status(404).json({ message: 'Société non trouvée' });
+      }
+
+      res.status(200).json(societe);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ message: 'Erreur interne du serveur' });
+    });
+});
+
 
 
 app.use('/uploads',express.static('uploads'))
