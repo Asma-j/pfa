@@ -25,21 +25,25 @@ const App = () => {
 
   const getSocieteId = async (token) => {
     try {
-  
-      const response = await fetch('http://localhost:5000/societe', {
+      const response = await fetch('http://localhost:5000/api/societe', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       const data = await response.json();
-      setSocieteId(data.societeId);
+      // Assuming the societeId is retrieved correctly from the response
+      setSocieteId(data.societeId); 
     } catch (error) {
       console.error(error);
     }
   };
+  
+  
   const onLogin = (token, societeId) => {
     console.log("Logged-in token: " + token);
     console.log("Logged-in societyId: " + societeId);
+    setToken(token); // Set token state
+    setSocieteId(societeId); // Set societeId state
   };
   
   return (

@@ -10,34 +10,31 @@ const Login = ({ onLogin }) => { // Passer la fonction onLogin comme une prop
     const navigate = useNavigate();
 
 
-    const handleLoginSubmit = (e) => {
+    const handleLoginSubmit = async (e) => {
         e.preventDefault();
-        axios.post('http://localhost:5000/api/login', { email, password })
-            .then(async response => {
-                console.log(response);
-                // Assuming the response contains the JWT token
-                const token = response.data.token;
-                
-                // Include the token in the request headers
-                const config = {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                };
-    
-                // Make a GET request to get user role
-                axios.get('http://localhost:5000/api/user-role', config)
-                    .then(roleResponse => {
-                        if (roleResponse.data.role === 'Admin' || roleResponse.data.role === 'Societe') {
-                            navigate("/dashboard");
-                        } else if (roleResponse.data.role === 'Candidat') {
-                            onLogin(); // Appel de la fonction onLogin après une connexion réussie
-                            navigate("/");
-                        }
-                    })
-                    .catch(err => console.log(err));
-            })
-            .catch(err => console.log(err));
+        try {
+            const response = await axios.post('http://localhost:5000/api/login', { email, password });
+            const token = response.data.token;
+            localStorage.setItem('token', token);
+
+            const societeId = response.data.societeId;
+            localStorage.setItem('societeId', societeId);
+
+            const roleResponse = await axios.get('http://localhost:5000/api/user-role', { headers: { Authorization: `Bearer ${token}` } });
+            const role = roleResponse.data.role;
+            if (role === 'Admin' || role === 'Societe') {
+                // Appeler la fonction de rappel avec le token et l'ID de la société
+                onLogin(token, societeId);
+                // Rediriger vers le tableau de bord
+                navigate("/dashboard");
+            } else if (role === 'Candidat') {
+                // Rediriger vers la page d'accueil pour les candidats
+                navigate("/");
+            }
+        } catch (err) {
+            console.error('Erreur lors de la connexion:', err);
+            // Gérer l'erreur de connexion ici
+        }
     };
     
     return (
