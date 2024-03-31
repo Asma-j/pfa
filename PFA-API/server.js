@@ -190,23 +190,20 @@ app.use((err, req, res, next) => {
 
 app.get('/api/offre', verifyToken, async (req, res) => {
   try {
-    if (!req.societe || !req.societe._id) {
-      return res.status(400).json({ message: 'Societe ID is not defined' });
+    let societeId = req.query.societe;
+
+    // Check if societe ID is provided
+    if (!societeId) {
+      return res.status(400).json({ message: 'Societe ID is required' });
     }
 
-    let societeId = req.societe._id;
-
-    if (req.query.societe) {
-      // Vérifiez si l'ID de la société est un ObjectID valide
-      if (!mongoose.Types.ObjectId.isValid(req.query.societe)) {
-        return res.status(400).json({ message: 'Invalid societe ID' });
-      }
-      societeId = req.query.societe;
+    // Vérifiez si l'ID de la société est un ObjectID valide
+    if (!mongoose.Types.ObjectId.isValid(societeId)) {
+      return res.status(400).json({ message: 'Invalid societe ID' });
     }
 
-
+    // Fetch offers based on societe ID
     const offres = await Offre.find({ societe: societeId });
-
 
     res.status(200).json({ offres });
   } catch (err) {

@@ -5,12 +5,14 @@ import Home from './Components/Candidat/Home';
 import Register from './Components/auth/Register';
 import Dashboard from './Components/Societe/Dashboard';
 import AddOfferPage from './Components/Societe/AddOfferPage';
+import ListeOffres from './Components/Candidat/ListeOffres';
 
 const App = () => {
   const [authenticated, setAuthenticated] = useState(false);
   const [societeId, setSocieteId] = useState(null);
   const [token, setToken] = useState(null);
 
+  
   useEffect(() => {
     const checkAuthentication = async () => {
       const storedToken = localStorage.getItem('token');
@@ -50,9 +52,9 @@ const App = () => {
     <Router>
       <div>
         <Routes>
-        <Route path="/login" element={<Login onLogin={onLogin} />} />
-
+          <Route path="/login" element={<Login onLogin={onLogin} />} />
           <Route path="/" element={authenticated ? <Home societeId={societeId} /> : <Navigate to="/login" />} />
+          <Route path="/offres" element={authenticated ? <ListeOffres societeId={societeId} /> : <Navigate to="/" />} />
           <Route path="/dashboard" element={authenticated ? <Dashboard societeId={societeId} /> : <Navigate to="/login" />} />
           <Route path="/register" element={<Register />} />
           <Route path="/addOffre" element={authenticated ? <AddOfferPage /> : <Navigate to="/login" />}></Route>

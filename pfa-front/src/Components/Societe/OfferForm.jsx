@@ -50,10 +50,7 @@ const response = await axios.post('http://localhost:5000/api/offre', formDataToS
         <label htmlFor="description" className="form-label">Description</label>
         <textarea className="form-control" id="description" name="description" value={formData.description} onChange={handleChange} placeholder="Enter description"></textarea>
       </div>
-      <div className="mb-3">
-        <label htmlFor="societe" className="form-label">Company</label>
-        <input type="text" className="form-control" id="societe" name="societe" value={formData.societe} onChange={handleChange} placeholder="Enter company" />
-      </div>
+    
       <div className="mb-3">
         <label htmlFor="dateExp" className="form-label">Expiration Date</label>
         <input type="date" className="form-control" id="dateExp" name="dateExp" value={formData.dateExp} onChange={handleChange} />
