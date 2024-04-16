@@ -12,6 +12,7 @@ const loginRoute = require('./routes/login');
 const registerRoute = require('./routes/register');
 const UtilisateurRoute = require('./routes/utilisateur');
 const OffreRoute = require('./routes/offre');
+const QuizRoute = require('./routes/quiz');
 const SocieteRoute = require('./routes/societe');
 const Utilisateur = require('./models/Utilisateur');
 const registerSocieteRoute = require('./routes/registerSociete');
@@ -265,6 +266,7 @@ app.get('/api/societe', verifyToken, (req, res) => {
 app.use('/uploads',express.static('uploads'))
 app.use('/api/utilisateur', UtilisateurRoute);
 app.use('/api/offre', OffreRoute);
+app.use('/api/Quiz', QuizRoute);
 app.use('/api/societe', SocieteRoute);
 app.use('/api/register', registerRoute);
 app.use('/api/registerSociete', registerSocieteRoute);

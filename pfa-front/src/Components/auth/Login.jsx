@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import recrutementImage from '../auth/img/marketing.jpg'; // Importer l'image
+import recrutementImage from '../auth/img/marketing.jpg';
 
-const Login = ({ onLogin }) => { // Passer la fonction onLogin comme une prop
+const Login = ({ onLogin }) => {
     const [email, setEmail] = useState('');
     const [password, setPass] = useState('');
     const navigate = useNavigate();
@@ -23,20 +23,20 @@ const Login = ({ onLogin }) => { // Passer la fonction onLogin comme une prop
             const roleResponse = await axios.get('http://localhost:5000/api/user-role', { headers: { Authorization: `Bearer ${token}` } });
             const role = roleResponse.data.role;
             if (role === 'Admin' || role === 'Societe') {
-                // Appeler la fonction de rappel avec le token et l'ID de la société
+
                 onLogin(token, societeId);
-                // Rediriger vers le tableau de bord
+
                 navigate("/dashboard");
             } else if (role === 'Candidat') {
-                // Rediriger vers la page d'accueil pour les candidats
+
                 navigate("/");
             }
         } catch (err) {
             console.error('Erreur lors de la connexion:', err);
-            // Gérer l'erreur de connexion ici
+
         }
     };
-    
+
     return (
         <div>
             <header className="bg-dark text-white py-3">
@@ -47,7 +47,7 @@ const Login = ({ onLogin }) => { // Passer la fonction onLogin comme une prop
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-md-6">
-                        {/* Utilisation de l'image importée */}
+
                         <img src={recrutementImage} alt="Recrutement" className="img-fluid" />
                     </div>
                     <div className="col-md-6">

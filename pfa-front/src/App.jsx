@@ -19,7 +19,7 @@ const App = () => {
       if (storedToken) {
         setToken(storedToken);
         setAuthenticated(true);
-        await getSocieteId(storedToken); // Fetch société ID if authenticated
+        await getSocieteId(storedToken);
       }
     };
     checkAuthentication();
@@ -33,7 +33,7 @@ const App = () => {
         },
       });
       const data = await response.json();
-      // Assuming the societeId is retrieved correctly from the response
+
       setSocieteId(data.societeId); 
     } catch (error) {
       console.error(error);
@@ -44,8 +44,8 @@ const App = () => {
   const onLogin = (token, societeId) => {
     console.log("Logged-in token: " + token);
     console.log("Logged-in societyId: " + societeId);
-    setToken(token); // Set token state
-    setSocieteId(societeId); // Set societeId state
+    setToken(token); 
+    setSocieteId(societeId);
   };
   
   return (

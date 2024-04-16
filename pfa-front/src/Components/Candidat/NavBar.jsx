@@ -5,7 +5,7 @@ import profile from '../auth/img/images.png';
 
 const NavBar = () => {
   const handleLogout = () => {
-    // Mettez ici votre logique de déconnexion
+  
   };
   return (
   

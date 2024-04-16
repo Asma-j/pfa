@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Card, Button } from 'react-bootstrap';
 import NavBar from './NavBar';
 import { useLocation } from 'react-router-dom';
+import '../Candidat/style.css';
 
 const ListeOffres = () => {
   const [offres, setOffres] = useState([]);
-  const [societe, setSociete] = useState(null); // State pour stocker les données de la société
+  const [filteredOffres, setFilteredOffres] = useState([]);
+  const [societe, setSociete] = useState(null); 
   const [token, setToken] = useState('');
+  const [searchInput, setSearchInput] = useState('');
   const location = useLocation();
 
   useEffect(() => {
@@ -20,11 +22,9 @@ const ListeOffres = () => {
           const urlSearchParams = new URLSearchParams(location.search);
           const urlSocieteId = urlSearchParams.get('societeId');
           if (urlSocieteId) {
-            // Appeler votre API pour récupérer les données de la société à partir de son ID
             const response = await axios.get(`http://localhost:5000/api/societe?id=${urlSocieteId}`, {
               headers: { Authorization: `Bearer ${storedToken}` },
             });
-            // Stocker les données de la société dans le state
             setSociete(response.data.societes.find(societe => societe._id === urlSocieteId));
           }
         }
@@ -37,16 +37,15 @@ const ListeOffres = () => {
   }, [location.search]);
 
   useEffect(() => {
-    console.log('Societe:', societe); // Afficher les données de la société dans la console
     const fetchOffres = async () => {
       try {
         if (token && societe) {
           const response = await axios.get(`http://localhost:5000/api/offre?societe=${societe._id}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
-  
           const offres = response.data.offres;
           setOffres(offres);
+          setFilteredOffres(offres); // Initialize filteredOffres with all offers initially
         }
       } catch (error) {
         console.error('Error fetching offres:', error);
@@ -55,30 +54,64 @@ const ListeOffres = () => {
   
     fetchOffres();
   }, [token, societe]);
-  
-  console.log('Offres:', offres);
-  
+
+  const handleSearchChange = event => {
+    const input = event.target.value;
+    setSearchInput(input);
+    if (input === '') {
+      setFilteredOffres(offres); // Reset filteredOffres to display all offers
+    }
+  };
+
+  const handleSearchButton = () => {
+    const filtered = offres.filter(offre =>
+      offre.titre.toLowerCase().includes(searchInput.toLowerCase())
+    );
+    setFilteredOffres(filtered);
+  };
+
   return (
     <div>
       <NavBar />
       <div className="container mt-4">
-        {societe && <h2>Liste des Offres par {societe.nom_societe}</h2>}
-        <br></br>
-        {offres.map((offre, index) => (
-          <div key={index}>
-            <div className="row">
-              <div className="col-md-4 mb-4">
-                <Card>
-                  <Card.Body>
-                    <Card.Title>{offre.titre}</Card.Title>
-                    <Card.Text>{offre.description}</Card.Text>
-                    <Button variant="primary">Postuler</Button>
-                  </Card.Body>
-                </Card>
+        {societe && <h2 className="mb-4">Liste des Offres par {societe.nom_societe}</h2>}
+        <div className="row">
+          <div className="col-md-12 mb-4">
+            <div className="input-group">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Rechercher par titre..."
+                style={{ marginRight: '20px'}} 
+                value={searchInput}
+                onChange={handleSearchChange}
+              />
+              <div className="input-group-append">
+                <button className="btn btn-primary " type="button" onClick={handleSearchButton}>
+                  Rechercher
+                </button>
               </div>
             </div>
           </div>
-        ))}
+          {filteredOffres.map((offre, index) => (
+            <div key={index} className="col-md-12 mb-4">
+              <div className="card">
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-md-8">
+                      <h3 className="card-title">{offre.titre}</h3>
+                      <p className="card-text">{offre.description}</p>
+                    </div>
+                    <div className="col-md-4 d-flex flex-column justify-content-between align-items-end">
+                      <p className="card-text mb-0">{new Date(offre.dateExp).toLocaleDateString()}</p>
+                      <button className="btn btn-primary mt-2">Postuler</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

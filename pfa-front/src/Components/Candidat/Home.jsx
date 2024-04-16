@@ -95,7 +95,7 @@ const Home = () => {
                   <h5 className="card-title">{societe.nom_societe}</h5>
                   <p className="card-text">Adresse: {societe.adresse}</p>
                   <p className="card-text">Poste: {societe.poste}</p>
-                  {/* Utilisation de Link pour naviguer vers la page ListeOffres */}
+              
                   <Link to={`/offres?societeId=${societe._id}`} className="btn btn-primary">Voir toutes les offres</Link>
                 </div>
               </div>
