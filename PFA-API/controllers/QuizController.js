@@ -3,10 +3,11 @@ const Question = require('../models/Question');
 const Reponse = require('../models/Reponse');
 const Utilisateur = require('../models/Utilisateur');
 const ResponseCandidat = require('../models/ResponseCandidat');
+const Offre = require('../models/Offre');
 
 exports.getAllQuizz = async (req, res) => {
   try {
-    const quiz = await Quiz.find().populate('questions');
+    const quiz = await Quiz.find().populate('offre');
     res.json(quiz);
   } catch (error) {
     console.error(error);
@@ -15,7 +16,7 @@ exports.getAllQuizz = async (req, res) => {
 };
 exports.getReponses = async (req, res) => {
     try {
-      const reponses = await Reponse.find().populate('candidat');
+      const reponses = await Reponse.find().populate('question');
       res.json(reponses);
     } catch (error) {
       console.error(error);
@@ -55,41 +56,48 @@ exports.createCandidature = async (req, res) => {
 
 
 exports.createQuizz = async (req, res) => {
-  const { titre, durée, questions } = req.body;
+  const { titre, durée, offreId } = req.body;
   try {
-    const quiz = await Quiz.create({ titre, durée });
-    if (questions && questions.length > 0) {
-      const createdQuestions = await Question.insertMany(questions.map(q => ({ ...q, quiz: quiz._id })));
-      quiz.questions = createdQuestions.map(q => q._id);
-      await quiz.save();
+    // Vérifiez d'abord si l'offre associée au quiz existe
+    const offre = await Offre.findOne({ _id: offreId });
+    if (!offre) {
+      return res.status(400).json({ message: "Offre invalide." });
     }
-    res.status(201).json({ message: "Quiz créé avec succès." });
+
+    // Créez le quiz avec le titre, la durée et l'ID de l'offre associée
+    const newQuiz = await Quiz.create({ titre, durée, offre: offreId });
+
+    res.status(201).json({ message: "Quiz créé avec succès.", newQuiz });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Erreur lors de la création du quiz." });
   }
 };
 
+
 exports.createQuestion = async (req, res) => {
-  const { contenu, reponses } = req.body;
+  const { contenu, quizId } = req.body;
   try {
-    const question = await Question.create({ contenu });
-    if (Array.isArray(reponses) && reponses.length > 0) {
-      const createdReponses = await Reponse.insertMany(reponses.map(r => ({ ...r, question: question._id })));
-      question.reponses = createdReponses.map(r => r._id);
-      await question.save();
-    }
-    res.status(201).json({ message: "Question créée avec succès." });
+
+      const quiz = await Quiz.findOne({ _id: quizId });
+      if (!quiz) {
+          return res.status(400).json({ message: "Quiz invalide." });
+      }
+
+      // Créez la question avec l'ID du quiz associé
+      const newQuestion = await Question.create({ contenu, quiz: quizId });
+
+      res.status(201).json({ message: "Question créée avec succès.", newQuestion });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Erreur lors de la création de la question." });
+      console.error(error);
+      res.status(500).json({ message: "Erreur lors de la création de la question." });
   }
 };
 
 
 exports.getQuestions = async (req, res) => {
   try {
-      const questions = await Question.find().populate('Reponses'); // Utilisez 'Reponses' avec une majuscule, qui correspond au nom du chemin dans le schéma
+      const questions = await Question.find().populate('quiz'); 
       res.json(questions);
   } catch (error) {
       console.error(error);
@@ -100,25 +108,20 @@ exports.getQuestions = async (req, res) => {
 
 
 exports.createReponse = async (req, res) => {
-    const { reponse, correctionReponse, candidatId } = req.body;
+    const { reponse, correctionReponse, questionId } = req.body;
     try {
       
 
         // Vérifiez d'abord si l'utilisateur existe
-        const candidat = await Utilisateur.findOne({ _id: candidatId });
-        if (!candidat) {
+        const question = await Question.findOne({ _id: questionId });
+        if (!question) {
         
-            return res.status(400).json({ message: "Utilisateur invalide." });
+            return res.status(400).json({ message: "question invalide." });
         }
 
-        // Vérifiez si l'utilisateur a le rôle de candidat
-        if (candidat.role !== 'Candidat') {
-            console.log("L'utilisateur n'a pas le rôle de candidat:", candidat);
-            return res.status(400).json({ message: "L'utilisateur n'est pas un candidat." });
-        }
-  
+      
         // Créez la réponse avec l'ID de l'utilisateur associé
-        const newReponse = await Reponse.create({ reponse, correctionReponse, candidat: candidatId });
+        const newReponse = await Reponse.create({ reponse, correctionReponse, question: questionId });
   
         res.status(201).json({ message: "Réponse créée avec succès.", newReponse });
     } catch (error) {

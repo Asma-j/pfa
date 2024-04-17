@@ -9,7 +9,7 @@ const ReponseSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  candidat: { type: mongoose.Schema.Types.ObjectId, ref: 'Utilisateur' }
+  question: { type: mongoose.Schema.Types.ObjectId, ref: 'question' }
 });
 
 const Reponse = mongoose.model('Reponse', ReponseSchema);

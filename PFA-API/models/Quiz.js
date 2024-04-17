@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+
 
 const QuizSchema = new mongoose.Schema({
   titre: {
@@ -10,10 +10,7 @@ const QuizSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  Questions: {
-    type: Schema.Types.ObjectId,
-    ref: 'question' 
-  },
+  offre: { type: mongoose.Schema.Types.ObjectId, ref: 'offre' },
 });
 
 const Quizz = mongoose.model('Quizz', QuizSchema);

@@ -7,10 +7,7 @@ const QuestionSchema = new mongoose.Schema({
       type: String,
       required: true
   },
-  Reponses: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Reponse'
-  }]
+  quiz: { type: mongoose.Schema.Types.ObjectId, ref: 'Quizz' },
 });
   
   const question = mongoose.model('question', QuestionSchema);
