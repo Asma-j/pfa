@@ -6,6 +6,7 @@ import Register from './Components/auth/Register';
 import Dashboard from './Components/Societe/Dashboard';
 import AddOfferPage from './Components/Societe/AddOfferPage';
 import ListeOffres from './Components/Candidat/ListeOffres';
+import Offres from './Components/Societe/Offres';
 
 const App = () => {
   const [authenticated, setAuthenticated] = useState(false);
@@ -57,6 +58,7 @@ const App = () => {
           <Route path="/offres" element={authenticated ? <ListeOffres societeId={societeId} /> : <Navigate to="/" />} />
           <Route path="/dashboard" element={authenticated ? <Dashboard societeId={societeId} /> : <Navigate to="/login" />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/offre" element={<Offres />} />
           <Route path="/addOffre" element={authenticated ? <AddOfferPage /> : <Navigate to="/login" />}></Route>
         </Routes>
       </div>

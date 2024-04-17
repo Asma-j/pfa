@@ -4,7 +4,7 @@ import axios from 'axios';
 import quiz from '../auth/img/image7.png';
 import defaultAvatar from '../auth/img/images (1).png'; 
 import { Image , Form, FormControl, Button } from 'react-bootstrap';
-import NavBar from './NavBar';
+import NavBar from '../NavBar';
 
 const Home = () => {
   const [societes, setSocietes] = useState(null); // Initialiser avec null

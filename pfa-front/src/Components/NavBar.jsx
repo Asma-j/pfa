@@ -1,7 +1,7 @@
 import React from 'react'
 import { Navbar, Nav,NavDropdown,Image} from 'react-bootstrap';
-import recrutementlogo from '../auth/img/image6.png'; 
-import profile from '../auth/img/images.png'; 
+import recrutementlogo from './auth/img/image6.png'; 
+import profile from './auth/img/images.png'; 
 
 const NavBar = () => {
   const handleLogout = () => {
@@ -23,7 +23,7 @@ const NavBar = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
-            <Nav.Link href="#home">Accueil</Nav.Link>
+            <Nav.Link href="/">Accueil</Nav.Link>
           </Nav>
           <Nav style={{ marginLeft: 'auto' }}>
   <Nav.Link href="#profile">

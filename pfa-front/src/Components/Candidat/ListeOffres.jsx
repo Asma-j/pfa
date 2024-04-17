@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import NavBar from './NavBar';
+import NavBar from '../NavBar';
 import { useLocation } from 'react-router-dom';
 import '../Candidat/style.css';
 
