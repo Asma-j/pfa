@@ -6,6 +6,9 @@ const cors = require('cors'); // Importez le module CORS
 const jwt = require('jsonwebtoken');
 const Societe = require('./models/Societe');
 const Offre = require('./models/Offre');
+const Quiz = require('./models/Quiz');
+const Question = require('./models/Question');
+const Reponse = require('./models/Reponse');
 const upload = require('./middleware/upload')
 
 const loginRoute = require('./routes/login');
@@ -160,7 +163,53 @@ router.get('/user-role', verifyToken, (req, res) => {
 });
 
 
+app.post("/api/Quiz", verifyToken, async (req, res) => {
+  const { titre, durée, questions } = req.body;
+  try {
+    // Vérifiez si l'utilisateur est une société
+    if (req.decoded.role === 'Societe' && !req.decoded.companyId) {
+      return res.status(403).json({ message: 'Vous devez sélectionner une offre pour ajouter un quiz.' });
+    }
 
+    // Vérifiez si l'offre associée au quiz existe
+    const offre = await Offre.findOne({ _id: req.body.offreId });
+    if (!offre) {
+      return res.status(400).json({ message: "Offre invalide." });
+    }
+
+    // Créez le quiz avec le titre, la durée et l'ID de l'offre associée
+    const newQuiz = await Quiz.create({ titre, durée, offre: req.body.offreId });
+
+    // Créez les questions et les réponses associées
+    const createdQuestions = [];
+    for (const { contenu, reponses } of questions) {
+      const newQuestion = await Question.create({ contenu, quiz: newQuiz._id });
+
+      const createdReponses = [];
+      for (const { reponse, correctionReponse } of reponses) {
+        const newReponse = await Reponse.create({ reponse, correctionReponse, question: newQuestion._id });
+        createdReponses.push(newReponse._id);
+      }
+
+      newQuestion.reponses = createdReponses;
+      await newQuestion.save();
+
+      createdQuestions.push(newQuestion._id);
+    }
+
+    newQuiz.questions = createdQuestions;
+    await newQuiz.save();
+
+    // Vérifier si les questions et les réponses ont été ajoutées
+    console.log("Questions ajoutées :", createdQuestions);
+    console.log("Réponses ajoutées :", newQuiz.questions);
+
+    res.status(201).json({ message: "Quiz créé avec succès.", newQuiz });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Erreur lors de la création du quiz." });
+  }
+});
 
 app.post("/api/register", (req, res) => {
   Utilisateur.create(req.body)

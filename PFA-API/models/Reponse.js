@@ -7,7 +7,7 @@ const ReponseSchema = new mongoose.Schema({
   },
   correctionReponse: {
     type: String,
-    required: true
+    required:false
   },
   question: { type: mongoose.Schema.Types.ObjectId, ref: 'question' }
 });

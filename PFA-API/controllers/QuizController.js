@@ -108,24 +108,25 @@ exports.getQuestions = async (req, res) => {
 
 
 exports.createReponse = async (req, res) => {
-    const { reponse, correctionReponse, questionId } = req.body;
-    try {
-      
+  const { reponse, correctionReponse, questionId } = req.body;
+  try {
+      // Vérifiez d'abord si l'utilisateur existe
+      const question = await Question.findOne({ _id: questionId });
+      if (!question) {
+          return res.status(400).json({ message: "Question invalide." });
+      }
 
-        // Vérifiez d'abord si l'utilisateur existe
-        const question = await Question.findOne({ _id: questionId });
-        if (!question) {
-        
-            return res.status(400).json({ message: "question invalide." });
-        }
+      // Créez la réponse avec l'ID de la question associée
+      let newReponse;
+      if (correctionReponse !== undefined && correctionReponse !== '') {
+          newReponse = await Reponse.create({ reponse, correctionReponse, question: questionId });
+      } else {
+          newReponse = await Reponse.create({ reponse, question: questionId });
+      }
 
-      
-        // Créez la réponse avec l'ID de l'utilisateur associé
-        const newReponse = await Reponse.create({ reponse, correctionReponse, question: questionId });
-  
-        res.status(201).json({ message: "Réponse créée avec succès.", newReponse });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Erreur lors de la création de la réponse." });
-    }
+      res.status(201).json({ message: "Réponse créée avec succès.", newReponse });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Erreur lors de la création de la réponse." });
+  }
 };

@@ -61,7 +61,7 @@ const Offres = () => {
                                     <td>
   <Button variant="success">Modifier</Button>{' '}
   <Button variant="danger">Supprimer</Button>{' '}
-  <Button variant="info">Ajouter Quiz</Button>
+  <Button variant="info" href='/addQuiz'>Ajouter Quiz</Button>
 </td>
 
 
