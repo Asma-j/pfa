@@ -19,7 +19,8 @@ const Login = ({ onLogin }) => {
 
             const societeId = response.data.societeId;
             localStorage.setItem('societeId', societeId);
-
+            const candidatId = response.data.candidatId; // Assurez-vous que le serveur renvoie l'ID du candidat dans la réponse
+            localStorage.setItem('candidatId', candidatId);
             const roleResponse = await axios.get('http://localhost:5000/api/user-role', { headers: { Authorization: `Bearer ${token}` } });
             const role = roleResponse.data.role;
             if (role === 'Admin' || role === 'Societe') {

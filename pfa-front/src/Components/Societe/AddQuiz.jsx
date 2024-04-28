@@ -29,7 +29,6 @@ const AddQuiz = () => {
     updatedQuestions[questionIndex].reponses[reponseIndex][field] = value;
     setQuestions(updatedQuestions);
   };
-
   const addQuestion = () => {
     setQuestions([...questions, { contenu: '', reponses: [{ reponse: '', correctionReponse: '' }] }]);
   };
@@ -64,31 +63,33 @@ const AddQuiz = () => {
     fetchOffres();
 }, []);
 const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const token = localStorage.getItem('token');
-      const updatedQuestions = questions.map((question, questionIndex) => ({
-        ...question,
+  e.preventDefault();
+  try {
+    const token = localStorage.getItem('token');
+    const response = await axios.post('http://localhost:5000/api/Quiz', {
+      titre,
+      durée,
+      offreId,
+      questions: questions.map((question, questionIndex) => ({
+        contenu: question.contenu,
         reponses: question.reponses.map((reponse, reponseIndex) => ({
-          ...reponse,
-          correctionReponse: (correctionIndex && correctionIndex.questionIndex === questionIndex && correctionIndex.reponseIndex === reponseIndex) ? reponse.reponse : ''
-        }))
-      }));
-      const response = await fetch('http://localhost:5000/api/Quiz', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ titre, durée, offreId, questions: updatedQuestions }),
-      });
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error('Erreur lors de la création du quiz:', error);
-    }
-  };
-  
+          reponse: reponse.reponse,
+          correctionReponse: correctionIndex && correctionIndex.questionIndex === questionIndex && correctionIndex.reponseIndex === reponseIndex ? reponse.reponse : '',
+        })),
+      })),
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+    const data = response.data;
+    console.log(data);
+  } catch (error) {
+    console.error('Erreur lors de la création du quiz:', error);
+  }
+};
+
 
 
   return (

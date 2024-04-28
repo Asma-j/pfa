@@ -5,7 +5,8 @@ const Schema = mongoose.Schema;
 const QuestionSchema = new mongoose.Schema({
   contenu: {
       type: String,
-      required: true
+ 
+    
   },
   quiz: { type: mongoose.Schema.Types.ObjectId, ref: 'Quizz' },
 });

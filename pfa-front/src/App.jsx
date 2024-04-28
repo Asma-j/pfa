@@ -8,6 +8,7 @@ import AddOfferPage from './Components/Societe/AddOfferPage';
 import ListeOffres from './Components/Candidat/ListeOffres';
 import Offres from './Components/Societe/Offres';
 import AddQuiz from './Components/Societe/AddQuiz';
+import Quiz from './Components/Candidat/Quiz';
 
 const App = () => {
   const [authenticated, setAuthenticated] = useState(false);
@@ -61,6 +62,7 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/offre" element={<Offres />} />
           <Route path="/addQuiz" element={<AddQuiz />} />
+          <Route path="/candidatQuiz" element={<Quiz />} />
           <Route path="/addOffre" element={authenticated ? <AddOfferPage /> : <Navigate to="/login" />}></Route>
         </Routes>
       </div>

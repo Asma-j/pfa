@@ -36,22 +36,23 @@ exports.getReponses = async (req, res) => {
 };
 
 exports.createCandidature = async (req, res) => {
-    const { reponseId, candidatId, taux } = req.body;
-    
-    try {
-        // Créer une nouvelle candidature
-        const newCandidature = await ResponseCandidat.create({ 
-            reponse: reponseId, 
-            candidat: candidatId, 
-            taux 
-        });
-        
-        res.status(201).json({ message: "Candidature créée avec succès.", newCandidature });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Erreur lors de la création de la candidature." });
-    }
+  const { reponseId, candidatId, taux } = req.body;
+  
+  try {
+      // Créer une nouvelle candidature
+      const newCandidature = await ResponseCandidat.create({ 
+          reponse: reponseId, 
+          candidat: candidatId, 
+          taux 
+      });
+      
+      res.status(201).json({ message: "Candidature créée avec succès.", newCandidature });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Erreur lors de la création de la candidature." });
+  }
 };
+
 
 
 

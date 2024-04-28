@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ResponseCandidatSchema = new mongoose.Schema({
-    reponse: {
+    reponse: [{
         type: Schema.Types.ObjectId,
-        ref: 'Reponse',
+        ref: 'Reponse', 
         required: true
-    },
+    }],
     candidat: {
         type: Schema.Types.ObjectId,
         ref: 'Utilisateur',
