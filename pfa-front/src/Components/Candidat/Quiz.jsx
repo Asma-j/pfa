@@ -6,7 +6,7 @@ const Quiz = () => {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [score, setScore] = useState(null);
-  const [showModal, setShowModal] = useState(false); // État pour contrôler l'affichage de la modal
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const fetchQuizData = async () => {
@@ -16,70 +16,95 @@ const Quiz = () => {
           throw new Error('Les données du quiz sont invalides');
         }
         setQuizData(response.data);
-        // Initialiser les réponses sélectionnées à null pour chaque question
         const initialSelectedAnswers = {};
         response.data.forEach(question => {
           initialSelectedAnswers[question._id] = null;
         });
         setSelectedAnswers(initialSelectedAnswers);
+        console.log(response.data); // Log quizData here
       } catch (error) {
         console.error('Erreur lors de la récupération des données du quiz:', error);
       }
     };
-
+  
     fetchQuizData();
   }, []);
+  
 
-  const handleAnswerSelection = (questionId, answerId) => {
+  const handleAnswerSelection = (questionId, reponseId) => {
     setSelectedAnswers(prevState => ({
       ...prevState,
-      [questionId]: answerId,
+      [questionId]: reponseId,
     }));
+    console.log(`Question ${questionId} - Selected answer: ${reponseId}`);
   };
 
   const handleSubmitQuiz = async () => {
     try {
       const token = localStorage.getItem('token');
-      const Questions = await axios.get(`http://localhost:5000/api/Questions`);
-      console.log('Questions',Questions)
-      const correctionData = Questions.data.map(question => ({
+      // No necesitas volver a obtener las preguntas aquí, ya que ya las tienes en quizData
+  
+      const reponseCorrecte = quizData.map(question => ({
         questionId: question._id,
-        correctionReponse: question.reponses.find(reponse => reponse.correctionReponse === true)?.reponse || '' // Trouver la réponse correcte
+        correctionReponse: question.reponses.find(reponse => reponse.correctionReponse)?.correctionReponse || '',
       }));
-      
-      console.log('correctionData',correctionData)
+  
       const selectedResponses = Object.entries(selectedAnswers)
-      .filter(([_, reponseId]) => reponseId !== null)
       .map(([questionId, reponseId]) => {
-        const correctionDataForQuestion = correctionData.find(data => data.questionId === questionId);
-        return {
-          questionId,
-          reponseId,
-          correctionReponseId: null, // Vous pouvez ajuster cela si nécessaire
-          correctionReponse: correctionDataForQuestion.correctionReponse
-        };
-      });
-        console.log('selectedResponses',selectedResponses)
+        const question = quizData.find(q => q._id === questionId);
+        if (question) {
+          const response = question.reponses.find(responseContainer => {
+            return responseContainer.reponses.some(response => response._id === reponseId);
+          });
+          console.log('Question:', question);
+          console.log('reponseId:', reponseId);
+          
+          console.log('response',response)
+          if (response) {
+            const selectedResponse = response.reponses.find(response => response._id === reponseId);
+            return {
+              questionId,
+              reponseId: selectedResponse._id,
+              reponse: selectedResponse.reponse,
+            };
+          
+          } else {
+            console.error("Réponse non trouvée pour la question:", questionId);
+            return null;
+          }
+        } else {
+          console.error("Question non trouvée avec l'ID:", questionId);
+          return null;
+        }
+      })
+      .filter(response => response !== null);
+    
+  
+  console.log('reponseCorrecte',reponseCorrecte)
+  
+  console.log('selectedResponses',selectedResponses)
       const unansweredQuestions = quizData
         .filter(question => selectedAnswers[question._id] === null)
-        .map(question => ({ questionId: question._id, reponseId: null, correctionReponseId: question.correctionReponseId }));
-        console.log('unansweredQuestions',unansweredQuestions)
-      const response = await axios.post(
-        'http://localhost:5000/api/Quiz/ResCandidat',
-        { reponses: [...selectedResponses, ...unansweredQuestions] },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+        .map(question => ({
+          questionId: question._id,
+          reponseId: null,
+        }));
   
-      if (response.data && response.data.taux !== undefined) {
-        const taux = response.data.taux > 0 ? response.data.taux : 0;
-        setScore(taux);
-        setShowModal(true); // Afficher la modal si la soumission a réussi
-        console.log('taux',taux)
-      } else {
-        console.error('Le taux de bonnes réponses est indéfini ou mal formaté dans la réponse.');
+      const responsesToSubmit = [...selectedResponses, ...unansweredQuestions];
+  
+      try {
+        const response = await axios.post(
+          'http://localhost:5000/api/Quiz/ResCandidat',
+          { reponses: responsesToSubmit },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        console.log('Response:', response);
+        // Further handling of the response
+        setQuizCompleted(true);
+        setShowModal(true);
+      } catch (error) {
+        console.error('Error submitting quiz:', error);
       }
-  
-      setQuizCompleted(true);
     } catch (error) {
       console.error('Erreur lors de la soumission du quiz:', error);
     }
@@ -96,69 +121,72 @@ const Quiz = () => {
   if (quizCompleted) {
     return (
       <div>
-      {showModal && (
-  <div className="modal fade show" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style={{ display: "block" }}>
-    <div className="modal-dialog" role="document">
-      <div className="modal-content">
-        <div className="modal-header">
-          <h5 className="modal-title" id="exampleModalLabel">Reponse Envoyer</h5>
-     
-        </div>
-        <div className="modal-body">
-         la societe a reçoit votre reponse consulter votre boite email
-        </div>
-        <div className="modal-footer">
-          <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={closeModal}>Close</button>
-    
-        </div>
-      </div>
-    </div>
-  </div>
-)}
-
-      </div>
-    );
-  }
-  
-  
-  // Render quiz questions
-  return (
-    <div className="container">
-      <h1 className="text-center mb-5">{quizData && quizData.length > 0 && quizData[0].titreQuiz}</h1>
-      <div className="row justify-content-center">
-        {quizData.map(question => (
-          <div key={question._id} className="col-md-8 mb-4">
-            <div className="card">
-              <div className="card-body">
-                <h3 className="card-title">{question.contenu}</h3>
-                <ul className="list-group">
-                  {question.reponses.map(reponse => (
-                    <li key={reponse._id} className="list-group-item">
-                      <label className="form-check">
-                        <input
-                          type="radio"
-                          className="form-check-input me-2"
-                          name={`question_${question._id}`}
-                          value={reponse._id}
-                          checked={selectedAnswers[question._id] === reponse._id}
-                          onChange={() => handleAnswerSelection(question._id, reponse._id)}
-                        />
-                        {reponse.reponse}
-                      </label>
-                    </li>
-                  ))}
-                </ul>
+        {showModal && (
+          <div className="modal fade show" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style={{ display: "block" }}>
+            <div className="modal-dialog" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title" id="exampleModalLabel">Reponse Envoyer</h5>
+                </div>
+                <div className="modal-body">
+                  La société a reçu votre réponse. Consultez votre boîte email.
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={closeModal}>Close</button>
+                </div>
               </div>
             </div>
           </div>
-        ))}
+        )}
       </div>
-      <div className="text-center mt-5">
-      <button className="btn btn-primary" onClick={handleSubmitQuiz} data-toggle="modal" data-target="#exampleModal">Soumettre</button>
+    );
+  }
 
-      </div>
+ // Render quiz questions
+return (
+  <div className="container">
+    <h1 className="text-center mb-5">{quizData && quizData.length > 0 && quizData[0].titreQuiz}</h1>
+    <div className="row justify-content-center">
+      {quizData && quizData.map(question => (
+        <div key={question._id} className="col-md-8 mb-4">
+          <div className="card">
+            <div className="card-body">
+              <h3 className="card-title">{question.contenu}</h3>
+              <ul className="list-group">
+              {question.reponses.map((rep, index) => (
+  <li key={rep._id} className="list-group-item">
+   
+   
+      {rep.reponses.map((response, idx) => (
+        <div key={response._id}>
+         
+         <input
+  type="radio"
+  value={response._id}
+  checked={selectedAnswers[question._id] === response._id}
+  onChange={() => handleAnswerSelection(question._id, response._id)}
+/>
+
+            {response.reponse}
+         
+        </div>
+      ))}
+   
+  </li>
+))}
+
+
+              </ul>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
-  );
+    <div className="text-center mt-5">
+      <button className="btn btn-primary" onClick={handleSubmitQuiz} data-toggle="modal" data-target="#exampleModal">Soumettre</button>
+    </div>
+  </div>
+);
 };
 
 export default Quiz;

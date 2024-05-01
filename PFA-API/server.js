@@ -2,7 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
-const ObjectId = mongoose.Types.ObjectId;
+const { ObjectId } = require('mongoose').Types;
+
 
 const cors = require('cors'); // Importez le module CORS
 const jwt = require('jsonwebtoken');
@@ -166,64 +167,69 @@ router.get('/user-role', verifyToken, (req, res) => {
 });
 
 
-// Ajoutez cette route à votre backend
 app.get("/api/Questions", async (req, res) => {
   try {
     // Récupérer toutes les questions avec le titre du quiz
-    const questions = await Question.find().populate('quiz'); // Assurez-vous que la relation entre les questions et les quiz est correctement configurée dans votre modèle de données
+    const questions = await Question.find().populate('quiz');
 
     // Pour chaque question, récupérer les réponses associées
     const questionsWithReponses = await Promise.all(questions.map(async (question) => {
       // Récupérer les réponses de la question
       const reponses = await Reponse.find({ question: question._id });
 
-      // Mapper les réponses pour inclure uniquement les champs nécessaires
       const mappedReponses = reponses.map(reponse => ({
         _id: reponse._id,
-        reponse: reponse.reponse,
+        reponses: reponse.reponses.map(rep => ({
+          reponse: rep.reponse,
+          _id: rep._id
+        })),
         correctionReponse: reponse.correctionReponse // ou d'autres champs nécessaires
       }));
+      
+      
 
-      // Retourner la question avec ses réponses
       return {
         _id: question._id,
-        titreQuiz: question.quiz.titre, // Ajouter le titre du quiz
+        titreQuiz: question.quiz.titre,
         contenu: question.contenu,
         reponses: mappedReponses
       };
     }));
 
-    // Retourner toutes les questions avec leurs réponses et le titre du quiz
-    res.status(200).json(questionsWithReponses);
+    res.json(questionsWithReponses);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Erreur lors de la récupération des questions." });
+    console.error('Erreur lors de la récupération des questions avec réponses:', error);
+    res.status(500).json({ message: "Erreur lors de la récupération des questions avec réponses." });
   }
 });
+
+
 app.post("/api/Quiz/ResCandidat", verifyToken, async (req, res) => {
   const { reponses } = req.body;
 
   try {
     let nombreDeBonnesReponses = 0;
-    let nombreTotalReponses = reponses.length;
+    let nombreTotalReponses = Reponse.length;
     const questionsTraitees = new Set();
+   
+    for (const { questionId, reponse, correctionReponseId } of reponses) {
 
-    for (const { questionId, reponseId, correctionReponseId } of reponses) {
       let query = { question: questionId.toString() };
-
-
+ 
       if (correctionReponseId !== null && correctionReponseId !== undefined) {
         query.correctionReponse = correctionReponseId;
       }
-
 
       const reponseCorrecte = await Reponse.findOne(query).select('correctionReponse');
       console.log('reponsecorrect', reponseCorrecte);
 
 
-      if (reponseCorrecte && reponseCorrecte.correctionReponse === reponseId) {
+
+      if (reponseCorrecte && reponseCorrecte.correctionReponse === reponse) {
         nombreDeBonnesReponses++;
+        console.log('reponse', reponse);
       }
+  
 
 
       questionsTraitees.add(questionId);
@@ -238,25 +244,23 @@ app.post("/api/Quiz/ResCandidat", verifyToken, async (req, res) => {
 
     // Enregistrement des réponses du candidat avec le taux calculé
     const newResponseCandidat = new ReponseCandidat({
-      reponse: reponses.map(({ reponseId }) => new ObjectId(reponseId)), // Enregistrez toutes les réponses du candidat en tant qu'ObjectId
-      candidat: req.user._id, // Assurez-vous que req.user._id contient l'ID du candidat
+      reponse: reponses.map(({ reponseId }) => {
+        if (!mongoose.Types.ObjectId.isValid(reponseId)) {
+          throw new Error(`L'ID de réponse "${reponseId}" n'est pas valide.`);
+        }
+        return new ObjectId(reponseId);
+      }),
+      candidat: req.user._id,
       taux: taux
     });
-    await newResponseCandidat.save(); // Enregistrez la réponse du candidat
+    await newResponseCandidat.save();
 
-    // Renvoyer le taux calculé
     res.status(200).json({ taux: taux });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Erreur lors du traitement des réponses." });
   }
 });
-
-
-
-
-
-
 app.get("/api/Quiz", async (req, res) => {
   try {
     const quiz = await Quiz.findOne(); // Récupérer le quiz
@@ -381,7 +385,6 @@ app.get('/api/societe', verifyToken, (req, res) => {
       res.status(500).json({ message: 'Erreur interne du serveur' });
     });
 });
-
 app.post("/api/Quiz", verifyToken, async (req, res) => {
   const { titre, durée, questions } = req.body;
   try {
@@ -448,7 +451,6 @@ app.post("/api/Quiz", verifyToken, async (req, res) => {
     res.status(500).json({ message: "Erreur lors de la création du quiz." });
   }
 });
-
 
 
 
