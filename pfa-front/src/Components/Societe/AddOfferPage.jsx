@@ -1,13 +1,21 @@
 import React from 'react';
 import OfferForm from './OfferForm';
+import NavBar from '../NavBar';
+import SideBar from '../SideBar'; // Importez le composant SideBar
 
 const AddOfferPage = () => {
-
-  
   return (
     <div>
-      <h2>Add New Offer</h2>
-      <OfferForm />
+      <NavBar />
+      <div className="container-fluid">
+  
+        <div className="row">
+            <SideBar /> 
+          <div className="col-md-6">
+            <OfferForm />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

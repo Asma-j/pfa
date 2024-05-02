@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import NavBar from '../NavBar';
+import SideBar from '../SideBar';
 
 const AddQuiz = () => {
   const [titre, setTitre] = useState('');
@@ -9,6 +12,7 @@ const AddQuiz = () => {
   const [questions, setQuestions] = useState([{ contenu: '', reponses: [{ reponse: '', correctionReponse: '' }] }]);
   const [token, setToken] = useState('');
   const [correctionIndex, setCorrectionIndex] = useState(null); // Nouvelle state pour stocker l'index de la réponse correcte
+  const navigate = useNavigate(); 
 
   const handleCorrectionChange = (questionIndex, reponseIndex) => {
     setCorrectionIndex({ questionIndex, reponseIndex });
@@ -85,6 +89,7 @@ const handleSubmit = async (e) => {
     });
     const data = response.data;
     console.log(data);
+    navigate('/offre');
   } catch (error) {
     console.error('Erreur lors de la création du quiz:', error);
   }
@@ -93,8 +98,14 @@ const handleSubmit = async (e) => {
 
 
   return (
-    <div className="container mt-5">
-      <h2>Ajouter un quiz</h2>
+  <div>
+        <NavBar />
+    <div className="container-fluid ">
+    <div className="row">
+   
+            <SideBar /> 
+       
+          <div className="col-md-8 mt-5"><h2>Ajouter un quiz</h2>
       <form onSubmit={handleSubmit}>
         <div className="row">
           <div className="col-md-6">
@@ -158,11 +169,13 @@ const handleSubmit = async (e) => {
             ))}
             <button type="button" className="btn btn-secondary" onClick={addQuestion}>Ajouter une question</button>
           </div>
-          <div className="col-md-6 d-flex align-items-end justify-content-end">
-            <button type="submit" className="btn btn-primary">Créer le quiz</button>
+          <div className="col-md-6 d-flex align-items-end justify-content-end ">
+            <button type="submit" className="btn btn-primary ">Créer le quiz</button>
           </div>
         </div>
-      </form>
+      </form></div>
+      </div>
+    </div>
     </div>
   );
 };

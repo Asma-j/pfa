@@ -361,6 +361,28 @@ app.post("/api/offre", verifyToken, (req, res) => {
     });
 });
 
+router.put('/offre/update', async (req, res, next) => {
+  try {
+    const _id = req.params.id; // Utilisez req.params pour récupérer l'ID de l'offre
+    const updatedData = {
+      titre: req.body.titre,
+      description: req.body.description,
+      societe: req.body.societe,
+      dateExp: req.body.dateExp
+    };
+
+    const response = await Offre.findByIdAndUpdate(_id, { $set: updatedData }, { new: true })
+                                  .populate('societe', 'nom_societe'); // Populate seulement le nom_societe de la société
+    if (!response) {
+      return res.status(404).json({ message: 'Offre not found' });
+    }
+
+    return res.json({ offre: response }); // Renvoie l'offre mise à jour avec le nom de la société
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 app.get('/api/societe', verifyToken, (req, res) => {
 

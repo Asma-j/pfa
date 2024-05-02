@@ -1,43 +1,42 @@
 import React from 'react'
 import { Navbar, Nav,NavDropdown,Image} from 'react-bootstrap';
 import recrutementlogo from './auth/img/image6.png'; 
-import profile from './auth/img/images.png'; 
-
+import profile from './auth/img/business-3d-businesswoman-with-coffee-prasing-a-great-job.png'; 
+import './NavbarAnimation.css';
 const NavBar = () => {
   const handleLogout = () => {
   
   };
   return (
+    <Navbar expand="lg" className='m-2 animated-navbar' style={{ backgroundColor: '#cedff53d' }}>
+      <Navbar.Brand >
+        <img
+          src={recrutementlogo}
+          width="35"
+          height="35"
+          alt="EmploiAnalytique Logo"
+          style={{ marginRight: '10px' }}
+        />
+        <small> EmploiAnalytique</small>
+      </Navbar.Brand>
+      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      <Navbar.Collapse id="basic-navbar-nav">
+        <Nav className="mr-auto">
+          <Nav.Link href="/">Accueil</Nav.Link>
+        </Nav>
+        <Nav style={{ marginLeft: 'auto' }}>
+          <Nav.Link href="#profile">
+            <Image src={profile} roundedCircle style={{ width: '45px', height: '35px', marginRight: '20px' }} />
+            Profil
+          </Nav.Link>
+          <NavDropdown title="Déconnexion" id="basic-nav-dropdown" style={{  marginRight: '20px' ,marginTop:'2px' }}>
+            <NavDropdown.Item onClick={handleLogout}>Déconnexion</NavDropdown.Item>
+          </NavDropdown>
+        </Nav>
+      </Navbar.Collapse>
+    </Navbar>
+  );
   
-    <Navbar bg="light" expand="lg" className='m-2' >
-        <Navbar.Brand  >
-          <img
-            src={recrutementlogo} 
-            width="30"
-            height="30"
-            alt="EmploiAnalytique Logo"
-            
-          />
-         <small> EmploiAnalytique</small>
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="mr-auto">
-            <Nav.Link href="/">Accueil</Nav.Link>
-          </Nav>
-          <Nav style={{ marginLeft: 'auto' }}>
-  <Nav.Link href="#profile">
-    <Image src={profile}  roundedCircle style={{ width: '30px', height: '30px', marginRight: '10px' }} />
-    Profil
-  </Nav.Link>
-  <NavDropdown title="Déconnexion" id="basic-nav-dropdown">
-    <NavDropdown.Item onClick={handleLogout}>Déconnexion</NavDropdown.Item>
-  </NavDropdown>
-</Nav>
-
-        </Navbar.Collapse>
-      </Navbar>
-  )
 }
 
 export default NavBar;

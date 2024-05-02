@@ -4,6 +4,9 @@ import NavBar from '../NavBar';
 import { useLocation } from 'react-router-dom';
 import '../Candidat/style.css';
 import { Link } from 'react-router-dom'; 
+
+import Footer from './Footer';
+
 const ListeOffres = () => {
   const [offres, setOffres] = useState([]);
   const [filteredOffres, setFilteredOffres] = useState([]);
@@ -113,6 +116,7 @@ const ListeOffres = () => {
           ))}
         </div>
       </div>
+      <Footer/>
     </div>
   );
 };
