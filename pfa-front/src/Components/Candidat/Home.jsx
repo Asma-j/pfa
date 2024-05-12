@@ -64,7 +64,7 @@ const Home = () => {
       </div>
       <div className="container mt-4" >
 
-<Form inline className="mb-4 search-form">
+<Form inline className=" search-form">
   <div className='row'>
     <div className='col-md-4'>
       <FormControl 
@@ -97,11 +97,11 @@ const Home = () => {
   <div class="row">
     {societes && societes.map((societe, index) => (
       <div class="col-md-4" key={index}>
-        <div class="card mb-4">
+        <div class="card mb-4" style={{width:'300px'}}>
           {societe && societe.avatar ? (
-            <img src={`http://localhost:5000/${societe.avatar}`} class="card-img-top" alt="Avatar" style={{height:'250px'}}/>
+            <img src={`http://localhost:5000/${societe.avatar}`} class="card-img-top" alt="Avatar" style={{height:'150px'}}/>
           ) : (
-            <img src={defaultAvatar} class="card-img-top" alt="Avatar par défaut" style="height: 250px;" />
+            <img src={defaultAvatar} class="card-img-top" alt="Avatar par défaut" style="height: 200px;width:200px;" />
           )}
 
           <div class="card-body">
@@ -126,7 +126,7 @@ const Home = () => {
               src={`http://localhost:5000/${societe.avatar}`}
               className="d-block carousel-item img"
               alt={`Avatar ${index}`}
-
+              style={{height:'150px'}}
            
             />
           ))}

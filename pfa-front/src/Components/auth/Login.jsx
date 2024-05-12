@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import recrutementImage from '../auth/img/marketing.jpg';
+import recrutementImage from '../auth/img/network-reviewing-online-resume-of-job-applicant.gif';
 
 const Login = ({ onLogin }) => {
     const [email, setEmail] = useState('');
@@ -19,14 +19,12 @@ const Login = ({ onLogin }) => {
 
             const societeId = response.data.societeId;
             localStorage.setItem('societeId', societeId);
-            const candidatId = response.data.candidatId; // Assurez-vous que le serveur renvoie l'ID du candidat dans la réponse
+            const candidatId = response.data.candidatId; 
             localStorage.setItem('candidatId', candidatId);
             const roleResponse = await axios.get('http://localhost:5000/api/user-role', { headers: { Authorization: `Bearer ${token}` } });
             const role = roleResponse.data.role;
             if (role === 'Admin' || role === 'Societe') {
-
                 onLogin(token, societeId);
-
                 navigate("/dashboard");
             } else if (role === 'Candidat') {
 
@@ -40,7 +38,7 @@ const Login = ({ onLogin }) => {
 
     return (
         <div>
-            <header className="bg-dark text-white py-3">
+            <header className=" text-white py-3">
                 <div className="container text-center">
                     <h1 className="mb-0">Connexion</h1>
                 </div>
@@ -75,15 +73,15 @@ const Login = ({ onLogin }) => {
                                         required
                                     />
                                 </div>
-                                <button type="submit" className="btn btn-primary">Se connecter</button>
-                                <Link to="/register" className="btn btn-secondary">S'inscrire</Link>
+                                <button type="submit" className="btn btn-primary " >Se connecter</button>
+                                <Link to="/register" className="btn btn-secondary " style={{marginLeft:'10px'}}>S'inscrire</Link>
                             </form>
                         </main>
                     </div>
                 </div>
             </div>
-            <footer className="bg-dark text-white py-3">
-                <div className="container text-center">
+            <footer className=" text-white py-3">
+                <div className="container text-center ">
                     <p className="mb-0">&copy; 2024 Plateforme de Recrutement</p>
                 </div>
             </footer>

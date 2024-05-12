@@ -12,7 +12,6 @@ Chart.register(LinearScale);
 const Dashboard = () => {
 
   const [chartData, setChartData] = useState({ datasets: [] });
-
   const [societeId, setSocieteId] = useState(null);
   const [token, setToken] = useState(null);
   const chartRef = useRef();

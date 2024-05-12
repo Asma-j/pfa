@@ -287,16 +287,7 @@ app.get("/api/Quiz", async (req, res) => {
   }
 });
 
-app.post("/api/register", (req, res) => {
-  Utilisateur.create(req.body)
-    .then(utilisateur => res.json(utilisateur))
-    .catch(err => res.json(err));
-});
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Internal server error' });
-});
+
 app.post("/api/registerSociete", upload.single("avatar"), (req, res) => {
   const formData = {
     ...req.body,
@@ -478,15 +469,18 @@ app.post("/api/Quiz", verifyToken, async (req, res) => {
 
 
 app.post("/api/register", (req, res) => {
+
   Utilisateur.create(req.body)
     .then(utilisateur => res.json(utilisateur))
-    .catch(err => res.json(err));
+    .catch(err => res.json(err));  
+
 });
-// Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
+  console.log("An error occurred:", err); // Ajout du console.log
   res.status(500).json({ message: 'Internal server error' });
 });
+
 
 app.use('/uploads', express.static('uploads'))
 app.use('/api/utilisateur', UtilisateurRoute);

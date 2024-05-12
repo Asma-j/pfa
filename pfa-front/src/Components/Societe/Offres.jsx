@@ -116,8 +116,8 @@ const Offres = () => {
                         </div>
                     ) : (
                         <>
-                            <Button variant="primary">
-                                <Link to="/addOffre" className="nav-link d-none d-sm-inline px-1">Ajouter Offre</Link>
+                            <Button variant="primary mb-4 mt-3">
+                                <Link to="/addOffre" className="nav-link d-none d-sm-inline px-1 ">Ajouter Offre</Link>
                             </Button>
                             <table className="table">
                                 <thead>
@@ -135,11 +135,12 @@ const Offres = () => {
                                             <td>{offre.description}</td>
                                             <td>{new Date(offre.dateExp).toLocaleDateString()}</td>
                                             <td>
-                                                <Button variant="success" onClick={() => handleModifier(offre._id)}>
+                                                <Button variant="success "   onClick={() => handleModifier(offre._id)}>
                                                     Modifier
                                                 </Button>
-                                                <Button variant="danger" onClick={() => handleSupprimer(offre._id)}>Supprimer</Button>
-                                                <Button variant="info" href='/addQuiz'>Ajouter Quiz</Button>
+                                                <Button variant="danger " style={{marginLeft:'20px'}} onClick={() => handleSupprimer(offre._id)}>Supprimer</Button>
+                                                <Button variant="info" style={{marginLeft:'20px'}} href='/addQuiz'>Ajouter Quiz</Button>
+                                                <Button style={{marginLeft:'20px'}} >Détail</Button>
                                             </td>
                                         </tr>
                                     ))}

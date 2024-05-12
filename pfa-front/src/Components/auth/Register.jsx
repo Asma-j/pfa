@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import recrutementImage from '../auth/img/marketing.jpg'; 
+import recrutementImage from '../auth/img/network-reviewing-online-resume-of-job-applicant.gif'; 
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import '../Candidat/style.css';
 
 const Register = () => {
     const [nom, setNom] = useState('');
@@ -40,16 +41,23 @@ const Register = () => {
             formData.append('prenom', prenom);
             formData.append('email', email);
             formData.append('password', password);
-            formData.append('role', role);
             
+            console.log('nom',nom)
+            console.log('prenom',prenom)
+            console.log('email',email)
+            console.log('password',password)
+            console.log('role',role)
+       
             axios.post('http://localhost:5000/api/register', formData ,{
                 headers: {
                   'Content-Type': 'multipart/form-data'
                 }
+               
               })
                 .then(response => {
                     console.log(response);
                     navigate("/login");
+                   
                 })
                 .catch(err => console.log(err));
         }
@@ -59,7 +67,7 @@ const Register = () => {
 
     return (
         <div>
-            <header className="bg-dark text-white py-3">
+            <header className=" text-white py-3">
                 <div className="container text-center">
                     <h1 className="mb-0">Inscription</h1>
                 </div>
@@ -92,47 +100,52 @@ const Register = () => {
                                 {role !== 'Societe' && (
                                     <>
                                         <div className="form-group">
-                                            <label>Nom:</label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                name="nom"
-                                                onChange={(e) => setNom(e.target.value)}
-                                                required
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Prénom:</label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                name="prenom"
-                                                onChange={(e) => setPrenom(e.target.value)}
-                                                required
-                                            />
-                                        </div>
+  <label>Nom:</label>
+  <input
+    type="text"
+    className="form-control"
+    name="nom"
+    onChange={(e) => setNom(e.target.value)}
+    
+  />
+</div>
+
+<div className="form-group">
+  <label>Prénom:</label>
+  <input
+    type="text"
+    className="form-control"
+    name="prenom"
+    onChange={(e) => setPrenom(e.target.value)}
+    
+  />
+</div>
+
+
                                     </>
+                                    
                                 )}
-                                <div className="form-group">
-                                    <label>Email:</label>
-                                    <input
-                                        type="email"
-                                        className="form-control"
-                                        name="email"
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label>Mot de passe:</label>
-                                    <input
-                                        type="password"
-                                        className="form-control"
-                                        name="password"
-                                        onChange={(e) => setPass(e.target.value)}
-                                        required
-                                    />
-                                </div>
+                               <div className="form-group">
+  <label>Email:</label>
+  <input
+    type="email"
+    className="form-control"
+    name="email"
+    onChange={(e) => setEmail(e.target.value)}
+ required
+  />
+</div>
+
+<div className="form-group">
+  <label>Mot de passe:</label>
+  <input
+    type="password"
+    className="form-control"
+    name="password"
+    onChange={(e) => setPass(e.target.value)}
+  required
+  />
+</div>
                                 {/* Champs spécifiques pour la société */}
                                 {role === 'Societe' && (
                                     <>
@@ -176,13 +189,13 @@ const Register = () => {
                                 )}
                                 <button type="submit" className="btn btn-primary">S'inscrire</button>
                                 <Link to="/login
-                                " className="btn btn-secondary">Se connecter</Link>
+                                " className="btn btn-secondary" style={{marginLeft:'10px'}}>Se connecter</Link>
                                 </form>
                             </main>
                         </div>
                     </div>
                 </div>
-                <footer className="bg-dark text-white py-3">
+                <footer className=" text-white py-3">
                     <div className="container text-center">
                         <p className="mb-0">© 2024 Plateforme de Recrutement</p>
                     </div>

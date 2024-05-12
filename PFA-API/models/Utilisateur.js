@@ -5,22 +5,22 @@ const Schema = mongoose.Schema;
 const utilisateurSchema = new Schema({
   nom: {
     type: String,
-    required: true,
-    unique: true
+
   },
   prenom: {
     type: String,
-    required: true,
-    unique: true
+
+
   },
   email: {
     type: String,
-    required: true,
-    unique: true
+   
+ 
   },
   password: {
     type: String,
-    required: true
+
+
   },
 
   role: {
