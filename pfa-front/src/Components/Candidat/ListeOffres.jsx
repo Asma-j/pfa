@@ -107,7 +107,9 @@ const ListeOffres = () => {
                     </div>
                     <div className="col-md-4 d-flex flex-column justify-content-between align-items-end">
                       <p className="card-text mb-0">{new Date(offre.dateExp).toLocaleDateString()}</p>
-                     <Link to='/candidatQuiz'className="btn btn-primary mt-2">Postuler</Link>
+                    <Link to={`/candidatQuiz/${offre._id}`} className="btn btn-primary mt-2">Postuler</Link>
+
+
                     </div>
                   </div>
                 </div>

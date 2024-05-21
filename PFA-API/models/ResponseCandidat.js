@@ -15,7 +15,11 @@ const ResponseCandidatSchema = new mongoose.Schema({
     taux: {
         type: Number,
         required: true
-    }
+    },
+    cvUrl: {
+        type: String, 
+        required: true
+      }
 });
 
 const ResponseCandidat = mongoose.model('ResponseCandidat', ResponseCandidatSchema);

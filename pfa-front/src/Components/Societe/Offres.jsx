@@ -140,7 +140,7 @@ const Offres = () => {
                                                 </Button>
                                                 <Button variant="danger " style={{marginLeft:'20px'}} onClick={() => handleSupprimer(offre._id)}>Supprimer</Button>
                                                 <Button variant="info" style={{marginLeft:'20px'}} href='/addQuiz'>Ajouter Quiz</Button>
-                                                <Button style={{marginLeft:'20px'}} >Détail</Button>
+                                                <Button style={{marginLeft:'20px'}} href='/Gere' >Gérer Demande</Button>
                                             </td>
                                         </tr>
                                     ))}

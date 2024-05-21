@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const { ObjectId } = require('mongoose').Types;
+const path = require('path');
 
 
 const cors = require('cors'); // Importez le module CORS
@@ -23,6 +24,8 @@ const QuizRoute = require('./routes/quiz');
 const SocieteRoute = require('./routes/societe');
 const Utilisateur = require('./models/Utilisateur');
 const registerSocieteRoute = require('./routes/registerSociete');
+
+
 
 mongoose.connect('mongodb://127.0.0.1:27017/gestionEmploi')
   .then(() => console.log('MongoDB connected'))
@@ -204,14 +207,23 @@ app.get("/api/Questions", async (req, res) => {
 });
 
 
-app.post("/api/Quiz/ResCandidat", verifyToken, async (req, res) => {
-  const { reponses } = req.body;
 
+
+app.post("/api/Quiz/ResCandidat", verifyToken, upload.single("cv"), async (req, res) => {
   try {
-    let nombreDeBonnesReponses = 0;
-    let nombreTotalReponses = Reponse.length;
-    const questionsTraitees = new Set();
+    const reponses = JSON.parse(req.body.reponses); // Parse the JSON string
+    const cvFile = req.file;
+
    
+
+    if (!Array.isArray(reponses)) {
+      return res.status(400).json({ message: "Les réponses sont manquantes ou mal formatées." });
+    }
+
+    let nombreDeBonnesReponses = 0;
+    const nombreTotalReponses = Reponse.length;
+    const questionsTraitees = new Set();
+
     for (const { questionId, reponse, correctionReponseId } of reponses) {
 
       let query = { question: questionId.toString() };
@@ -241,8 +253,10 @@ app.post("/api/Quiz/ResCandidat", verifyToken, async (req, res) => {
     // Calcul du taux en ne tenant compte que des réponses avec correction
     const taux = nombreTotalReponses > 0 ? (nombreDeBonnesReponses / nombreTotalReponses) * 100 : 0;
     console.log('taux', taux);
+    if (!cvFile || !cvFile.path) {
+      return res.status(400).json({ message: "Le fichier CV est manquant." });
+    }
 
-    // Enregistrement des réponses du candidat avec le taux calculé
     const newResponseCandidat = new ReponseCandidat({
       reponse: reponses.map(({ reponseId }) => {
         if (!mongoose.Types.ObjectId.isValid(reponseId)) {
@@ -251,14 +265,29 @@ app.post("/api/Quiz/ResCandidat", verifyToken, async (req, res) => {
         return new ObjectId(reponseId);
       }),
       candidat: req.user._id,
-      taux: taux
+      taux: taux,
+      cvUrl: cvFile.path 
     });
-    await newResponseCandidat.save();
 
+    await newResponseCandidat.save();
     res.status(200).json({ taux: taux });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Erreur lors du traitement des réponses." });
+  }
+});
+
+
+
+app.get("/api/Quiz/ResCandidat", verifyToken, async (req, res) => {
+  try {
+
+    const responsesCandidat = await ReponseCandidat.find().populate('reponse').populate('candidat');
+    console.log(responsesCandidat)
+    res.json(responsesCandidat);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Erreur lors de la récupération des réponses des candidats." });
   }
 });
 app.get("/api/Quiz", async (req, res) => {

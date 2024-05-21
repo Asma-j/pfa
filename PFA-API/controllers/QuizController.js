@@ -39,19 +39,26 @@ exports.createCandidature = async (req, res) => {
   const { reponseId, candidatId, taux } = req.body;
   
   try {
-      // Créer une nouvelle candidature
-      const newCandidature = await ResponseCandidat.create({ 
-          reponse: reponseId, 
-          candidat: candidatId, 
-          taux 
-      });
-      
-      res.status(201).json({ message: "Candidature créée avec succès.", newCandidature });
+    // Créer une nouvelle candidature
+    let newCandidature = new ResponseCandidat({ 
+      reponse: reponseId, 
+      candidat: candidatId, 
+      taux 
+    });
+
+    if (req.file) {
+      newCandidature.cvUrl = req.file.path;
+    }
+
+    newCandidature = await newCandidature.save();
+
+    res.status(201).json({ responseCandidat: newCandidature });
   } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Erreur lors de la création de la candidature." });
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 
 
 

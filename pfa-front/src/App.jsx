@@ -10,6 +10,7 @@ import Offres from './Components/Societe/Offres';
 import AddQuiz from './Components/Societe/AddQuiz';
 import Quiz from './Components/Candidat/Quiz';
 import Edit from './Components/Societe/Edit';
+import GérerDemande from './Components/Societe/GérerDemande';
 
 
 const App = () => {
@@ -64,9 +65,11 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/offre" element={<Offres />} />
           <Route path="/addQuiz" element={<AddQuiz />} />
+          <Route path="/Gere" element={<GérerDemande />} />
           <Route path="/editOffre" element={<Edit />} />
     
-          <Route path="/candidatQuiz" element={<Quiz />} />
+          <Route path="/candidatQuiz/:OffreId" element={<Quiz />} />
+
           <Route path="/addOffre" element={authenticated ? <AddOfferPage /> : <Navigate to="/login" />}></Route>
         </Routes>
       </div>

@@ -3,7 +3,7 @@ const path = require('path');
 
 // Définir les types de fichiers autorisés
 const imageFileFilter = (req, file, cb) => {
-  if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+  if (!file.originalname.match(/\.(jpg|jpeg|png|gif|pdf)$/)) {
     return cb(new Error('Only image files are allowed!'), false);
   }
   cb(null, true);

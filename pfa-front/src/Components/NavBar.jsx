@@ -3,9 +3,15 @@ import { Navbar, Nav,NavDropdown,Image} from 'react-bootstrap';
 import recrutementlogo from './auth/img/image6.png'; 
 import profile from './auth/img/business-3d-businesswoman-with-coffee-prasing-a-great-job.png'; 
 import './NavbarAnimation.css';
+import {  useNavigate } from 'react-router-dom';
 const NavBar = () => {
+  const navigate = useNavigate(); 
+
   const handleLogout = () => {
-  
+    // Effacer les données d'authentification de localStorage ou du state si nécessaire
+    localStorage.removeItem('token');
+    localStorage.removeItem('societeId');
+    navigate('/login'); 
   };
   return (
     <Navbar expand="lg" className='m-2 animated-navbar' style={{ backgroundColor: '#cedff53d' }}>
