@@ -4,6 +4,7 @@ const Reponse = require('../models/Reponse');
 const Utilisateur = require('../models/Utilisateur');
 const ResponseCandidat = require('../models/ResponseCandidat');
 const Offre = require('../models/Offre');
+const sendNodemailer = require('../sendNodemailer');
 
 exports.getAllQuizz = async (req, res) => {
   try {
@@ -58,7 +59,23 @@ exports.createCandidature = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+exports.sendConfirmation = async (req, res) => {
+  const { email, taux } = req.body;
 
+  try {
+    if (taux > 60) {
+      sendNodemailer(email, 'Confirmation', 'Félicitations, vous avez été accepté!');
+      console.log(`Email de confirmation envoyé à ${email}`);
+      res.status(200).send({ message: 'Email envoyé' });
+    } else {
+      console.log(`Le taux est inférieur à 60 pour ${email}`);
+      res.status(400).send({ message: 'Le taux est inférieur à 60' });
+    }
+  } catch (error) {
+    console.error('Erreur lors de l\'envoi de l\'email de confirmation :', error);
+    res.status(500).send({ message: 'Erreur lors de l\'envoi de l\'email de confirmation' });
+  }
+};
 
 
 

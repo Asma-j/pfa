@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const { ObjectId } = require('mongoose').Types;
-const path = require('path');
+const sendNodemailer = require('./sendNodemailer');
 
 
 const cors = require('cors'); // Importez le module CORS
@@ -510,6 +510,24 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Internal server error' });
 });
 
+app.post('/api/Quiz/sendConfirmation', async (req, res) => {
+  const { email, taux } = req.body;
+  
+  
+  try {
+    if (taux > 60) {
+      await sendNodemailer(email, 'Confirmation', 'Félicitations, vous avez été accepté!');
+      console.log(`Email de confirmation envoyé à ${email}`);
+      res.status(200).send({ message: 'Email envoyé' });
+    } else {
+      console.log(`Le taux est inférieur à 60 pour ${email}`);
+      res.status(400).send({ message: 'Le taux est inférieur à 60' });
+    }
+  } catch (error) {
+    console.error('Erreur lors de l\'envoi de l\'email de confirmation :', error);
+    res.status(500).send({ message: 'Erreur lors de l\'envoi de l\'email de confirmation' });
+  }
+});
 
 app.use('/uploads', express.static('uploads'))
 app.use('/api/utilisateur', UtilisateurRoute);

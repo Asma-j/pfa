@@ -13,10 +13,10 @@ router.post('/show', offreController.show);
 // Get a single Utilisateur by ID
 router.post('/store', offreController.store);
 
-// Update a Utilisateur by ID
-router.put('/update', offreController.update);
+// Update an Offre by ID
+router.put('/:offreID', offreController.update);
 
-// Delete a Utilisateur by ID
-router.delete('/delete', offreController.destroy);
+// Delete an Offre by ID
+router.delete('/:offreID', offreController.destroy);
 
 module.exports = router;

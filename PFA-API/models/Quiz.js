@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 const QuizSchema = new mongoose.Schema({
   titre: {
     type: String,
-    required: true,
-    unique: true
+   
+
   },
   durée: {
     type: Number,

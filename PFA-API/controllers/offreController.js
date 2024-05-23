@@ -46,38 +46,42 @@ const store = (req, res, next) => {
 
 const update = async (req, res, next) => {
   try {
-    const _id = req.body._id; // Utilisez req.params pour récupérer l'ID de l'offre
-    const updatedData = {
-      titre: req.body.titre,
-      description: req.body.description,
-      societe: req.body.societe,
-      dateExp: req.body.dateExp
-    };
+      const offreID = req.params.offreID;
+      const updatedData = {
+          titre: req.body.titre,
+          description: req.body.description,
+          societe: req.body.societe,
+          dateExp: req.body.dateExp
+      };
 
-    const response = await Offre.findByIdAndUpdate(_id, { $set: updatedData }, { new: true })
-                                  .populate('societe', 'nom_societe'); // Populate seulement le nom_societe de la société
-    if (!response) {
-      return res.status(404).json({ message: 'Offre not found' });
-    }
+      const response = await Offre.findByIdAndUpdate(offreID, { $set: updatedData }, { new: true })
+                                  .populate('societe', 'nom_societe');
 
-    return res.json({ offre: response }); // Renvoie l'offre mise à jour avec le nom de la société
+      if (!response) {
+          return res.status(404).json({ message: 'Offre not found' });
+      }
+
+      return res.json({ offre: response });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: 'Internal server error' });
+      console.error(error);
+      return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
-
 const destroy = (req, res, next) => {
-  let _id = req.body._id; // Utilisez req.params pour récupérer l'ID de l'offre
-  Offre.findOneAndDelete({ _id: _id })
-    .then(response => {
-      res.json({ response });
-    })
-    .catch(error => {
-      console.error(error);
-      res.status(500).json({ message: 'Internal server error' });
-    });
+  let offreID = req.params.offreID;
+  Offre.findByIdAndDelete(offreID)
+      .then(response => {
+          if (!response) {
+              return res.status(404).json({ message: 'Offre not found' });
+          }
+          res.json({ message: 'Offre deleted successfully' });
+      })
+      .catch(error => {
+          console.error(error);
+          res.status(500).json({ message: 'Internal server error' });
+      });
 };
+
 
 module.exports = { index, show, store, update, destroy };

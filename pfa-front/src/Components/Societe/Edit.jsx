@@ -3,25 +3,25 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Button, Form } from 'react-bootstrap';
 
-const Edit = ({ token }) => {
-    const { id } = useParams(); // Obtenir l'ID de l'offre à partir des paramètres de l'URL
-    const [offer, setOffer] = useState(null);
+const Edit = () => {
+    const { id } = useParams();
+    const [offer, setOffer] = useState({
+        titre: '',
+        description: '',
+        dateExp: ''
+    });
     const navigate = useNavigate();
+    const token = localStorage.getItem('token');
 
-    // Fonction pour récupérer les détails de l'offre
     useEffect(() => {
         const fetchOffer = async () => {
             try {
                 const response = await axios.get(`http://localhost:5000/api/offre/${id}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+                    headers: { Authorization: `Bearer ${token}` },
                 });
-                
-                // Vérifiez le code d'état HTTP
+
                 if (response.status === 200) {
-                    // Mettre à jour l'état avec les données de l'offre
-                    setOffer(response.data);
+                    setOffer(response.data.offre);
                 } else {
                     console.error(`Erreur lors de la récupération de l'offre : code d'état ${response.status}`);
                 }
@@ -30,22 +30,19 @@ const Edit = ({ token }) => {
             }
         };
 
-        fetchOffer();
+        if (token) {
+            fetchOffer();
+        }
     }, [id, token]);
 
-    // Fonction pour gérer la soumission du formulaire
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            // Envoyer les modifications au serveur
-            const response = await axios.put(`http://localhost:5000/api/offre/update/${id}`, offer, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+            const response = await axios.put(`http://localhost:5000/api/offre/${id}`, offer, {
+                headers: { Authorization: `Bearer ${token}` },
             });
 
-            // Rediriger vers la liste des offres après la modification
             if (response.status === 200) {
                 navigate('/offres');
             }
@@ -54,12 +51,10 @@ const Edit = ({ token }) => {
         }
     };
 
-    // Si les données de l'offre ne sont pas encore chargées
     if (!offer) {
         return <p>Chargement...</p>;
     }
 
-    // Rendre le formulaire de modification
     return (
         <div>
             <h2>Modifier l'Offre</h2>

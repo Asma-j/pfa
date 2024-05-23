@@ -11,6 +11,6 @@ router.post('/Quiz', QuizController.createQuizz);
 router.post('/ResCandidat', upload.single('cvUrl'),QuizController.createCandidature);
 router.post('/Question', QuizController.createQuestion);
 router.post('/Reponse', QuizController.createReponse);
-
+router.post('/sendConfirmation', QuizController.sendConfirmation);
 
 module.exports = router;

@@ -1,4 +1,3 @@
-/* Styliser les cartes d'entreprise */
 .card {
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -37,13 +36,19 @@
 /* Styliser la présentation pour qu'elle soit absolue et superposée sur l'image */
 .presentation {
   position: absolute;
-  top: 40%; /* Centrer verticalement */
-  left: 10; /* Aligner à gauche */
-  transform: translateY(-50%); /* Ajuster le centrage vertical */
-  color: white; /* Choisir une couleur de texte qui contraste avec l'image */
-font-family:Verdana, Geneva, Tahoma, sans-serif;
-  padding: 20px; /* Espacement autour du texte */
-  width: 50%; /* Largeur de la présentation */
+  top: 40%;
+  /* Centrer verticalement */
+  left: 10;
+  /* Aligner à gauche */
+  transform: translateY(-50%);
+  /* Ajuster le centrage vertical */
+  color: white;
+  /* Choisir une couleur de texte qui contraste avec l'image */
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  padding: 20px;
+  /* Espacement autour du texte */
+  width: 50%;
+  /* Largeur de la présentation */
 }
 
 .quiz-image {
@@ -54,32 +59,44 @@ font-family:Verdana, Geneva, Tahoma, sans-serif;
 
 /* Styliser le formulaire de recherche */
 .search-form {
-  background-color: #d8e9f251; /* Couleur de fond légère */
-  padding: 20px; 
- 
-  box-shadow: 0 2px 4px rgba(196, 228, 240, 0.1); 
+  background-color: #d8e9f251;
+  /* Couleur de fond légère */
+  padding: 20px;
+
+  box-shadow: 0 2px 4px rgba(196, 228, 240, 0.1);
 }
 
 /* Styliser les champs de saisie */
 .search-input {
-  border: 1px solid #ddd; /* Bordure subtile */
-  border-radius: 4px; /* Bords arrondis */
-  padding: 10px; /* Espacement interne pour une meilleure lisibilité */
+  border: 1px solid #ddd;
+  /* Bordure subtile */
+  border-radius: 4px;
+  /* Bords arrondis */
+  padding: 10px;
+  /* Espacement interne pour une meilleure lisibilité */
 }
 
 /* Styliser le bouton de recherche */
 .search-button {
-  border: 1px solid #007bffe5; /* Bordure de couleur verte */
-  color: #007bffb4; /* Couleur du texte */
-  background-color: #fff; /* Fond blanc */
-  padding: 10px 20px; /* Espacement interne plus grand */
-  border-radius: 4px; /* Bords arrondis */
-  transition: all 0.3s ease; /* Transition douce pour les interactions */
+  border: 1px solid #007bffe5;
+  /* Bordure de couleur verte */
+  color: #007bffb4;
+  /* Couleur du texte */
+  background-color: #fff;
+  /* Fond blanc */
+  padding: 10px 20px;
+  /* Espacement interne plus grand */
+  border-radius: 4px;
+  /* Bords arrondis */
+  transition: all 0.3s ease;
+  /* Transition douce pour les interactions */
 }
 
 .search-button:hover {
-  background-color: #007bffe5; /* Fond vert au survol */
-  color: #fff; /* Texte blanc pour un contraste élevé */
+  background-color: #007bffe5;
+  /* Fond vert au survol */
+  color: #fff;
+  /* Texte blanc pour un contraste élevé */
 }
 
 /* Styliser le carrousel */
@@ -92,67 +109,81 @@ font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .carousel-item img {
-  max-height: 200px; 
-max-width: 200px;
-  margin: 50px; /* Centrer les images si elles ne sont pas assez larges */
+  max-height: 200px;
+  max-width: 200px;
+  margin: 50px;
+  /* Centrer les images si elles ne sont pas assez larges */
 }
 
 /* Styliser les contrôles du carrousel */
 .carousel-control-prev,
 .carousel-control-next {
-  filter: invert(100%); /* Rendre les flèches visibles sur des images claires ou foncées */
+  filter: invert(100%);
+  /* Rendre les flèches visibles sur des images claires ou foncées */
 }
 
 /* Styliser les indicateurs du carrousel */
 .carousel-indicators li {
-  background-color: #000; /* Couleur des indicateurs */
+  background-color: #000;
+  /* Couleur des indicateurs */
 }
 
 .carousel-indicators .active {
-  background-color: #fff; /* Couleur de l'indicateur actif */
+  background-color: #fff;
+  /* Couleur de l'indicateur actif */
 }
 
 footer {
-  background-color: #007bffb4; /* Couleur de fond du pied de page */
-  color: #ffffff; /* Couleur du texte */
-  padding: 40px 0; /* Espacement vertical */
+  background-color: #007bffb4;
+  /* Couleur de fond du pied de page */
+  color: #ffffff;
+  /* Couleur du texte */
+  padding: 40px 0;
+  /* Espacement vertical */
 }
 
 .footer h5 {
-  margin-bottom: 20px; 
+  margin-bottom: 20px;
 }
 
 .footer ul {
-  list-style-type: none; 
-  padding-left: 0; 
+  list-style-type: none;
+  padding-left: 0;
 }
 
 .footer ul li a {
-  color: #ffffff; 
-  text-decoration: none; 
-  transition: color 0.3s ease; /* Transition douce pour le changement de couleur */
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  /* Transition douce pour le changement de couleur */
 }
 
 .footer ul li a:hover {
-  color: #d1d1d1; /* Couleur des liens au survol */
+  color: #d1d1d1;
+  /* Couleur des liens au survol */
 }
 
 .footer a {
-  display: inline-block; /* Pour appliquer la marge */
-  margin-right: 10px; /* Espacement entre les liens */
+  display: inline-block;
+  /* Pour appliquer la marge */
+  margin-right: 10px;
+  /* Espacement entre les liens */
 }
 
 /* Ajouter des icônes pour les réseaux sociaux si nécessaire */
 .footer .social-icons {
-  font-size: 24px; /* Taille des icônes */
+  font-size: 24px;
+  /* Taille des icônes */
 }
 
 .footer .social-icons a {
-  color: #ffffff; /* Couleur des icônes */
+  color: #ffffff;
+  /* Couleur des icônes */
 }
 
 .footer .social-icons a:hover {
-  color: #d1d1d1; /* Couleur des icônes au survol */
+  color: #d1d1d1;
+  /* Couleur des icônes au survol */
 }
 
 /* Styliser le conteneur du quiz */
@@ -197,6 +228,7 @@ footer {
   font-size: 1.2rem;
 
 }
+
 .form-group {
   margin-bottom: 15px;
 }
@@ -218,13 +250,13 @@ footer {
   background-clip: padding-box;
   border: 1px solid #ced4da;
   border-radius: 4px;
-  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
 
 .form-control:focus {
   border-color: #80bdff;
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, .25);
 }
 
 /* Ajoutez cette classe aux éléments input pour un effet de transition sur le focus */
@@ -232,9 +264,11 @@ footer {
   transition: all 0.3s ease-in-out;
   transform: scale(1.02);
 }
-header{
+
+header {
   background-color: #007bffb4;
 }
+
 .modal-header .close {
   margin-left: auto;
 }

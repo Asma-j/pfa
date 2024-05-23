@@ -135,10 +135,10 @@ const Offres = () => {
                                             <td>{offre.description}</td>
                                             <td>{new Date(offre.dateExp).toLocaleDateString()}</td>
                                             <td>
-                                                <Button variant="success "   onClick={() => handleModifier(offre._id)}>
+                                                <Button variant="success" onClick={() => handleModifier(offre._id)}>
                                                     Modifier
                                                 </Button>
-                                                <Button variant="danger " style={{marginLeft:'20px'}} onClick={() => handleSupprimer(offre._id)}>Supprimer</Button>
+                                                <Button variant="danger" style={{ marginLeft: '20px' }} onClick={() => handleSupprimer(offre._id)}>Supprimer</Button>
                                                 <Button variant="info" style={{marginLeft:'20px'}} href='/addQuiz'>Ajouter Quiz</Button>
                                                 <Button style={{marginLeft:'20px'}} href='/Gere' >Gérer Demande</Button>
                                             </td>
