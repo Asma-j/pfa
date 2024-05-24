@@ -23,10 +23,12 @@ const Login = ({ onLogin }) => {
             localStorage.setItem('candidatId', candidatId);
             const roleResponse = await axios.get('http://localhost:5000/api/user-role', { headers: { Authorization: `Bearer ${token}` } });
             const role = roleResponse.data.role;
-            if (role === 'Admin' || role === 'Societe') {
+            if (role === 'Societe') {
                 onLogin(token, societeId);
                 navigate("/dashboard");
-            } else if (role === 'Candidat') {
+            } else if (role === 'Admin') {
+                navigate("/dashboardAdmin");
+            }else if (role === 'Candidat') {
 
                 navigate("/");
             }

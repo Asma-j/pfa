@@ -162,12 +162,12 @@ router.get('/user-role', verifyToken, (req, res) => {
   if (req.societe) {
     role = 'Societe';
   } else if (req.user) {
-    role = 'Admin';
-    role = 'Candidat';
+    role = req.user.role; // Assuming the role is stored in the user object
   }
 
   res.json({ role });
 });
+
 
 
 app.get("/api/Questions", async (req, res) => {
@@ -496,19 +496,20 @@ app.post("/api/Quiz", verifyToken, async (req, res) => {
 
 
 
-
-app.post("/api/register", (req, res) => {
-
-  Utilisateur.create(req.body)
+app.post('/api/register', upload.none(), (req, res) => {
+  const { nom, prenom, email, password, role } = req.body;
+  
+  const newUtilisateur = new Utilisateur({ nom, prenom, email, password, role });
+  newUtilisateur.save()
     .then(utilisateur => res.json(utilisateur))
-    .catch(err => res.json(err));  
-
+    .catch(err => res.status(500).json(err));
 });
 app.use((err, req, res, next) => {
   console.error(err.stack);
   console.log("An error occurred:", err); // Ajout du console.log
   res.status(500).json({ message: 'Internal server error' });
 });
+
 
 app.post('/api/Quiz/sendConfirmation', async (req, res) => {
   const { email, taux } = req.body;
